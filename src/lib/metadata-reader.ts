@@ -89,6 +89,10 @@ async function buildAiSignalsAndFields(
     const chunks = scanPngMetadata(bytes);
     for (const c of chunks) totalMetadataBytes += c.byteLength;
     for (const c of chunks) {
+      if (c.type === 'caBX') {
+        hasC2pa = true;
+        signals.add('Content Credentials / C2PA provenance manifest detected (caBX chunk)');
+      }
       if (c.keyword && /^(parameters|prompt|workflow|generation)$/i.test(c.keyword)) {
         signals.add(`PNG "${c.keyword}" text chunk detected (common Stable Diffusion / ComfyUI metadata)`);
       }
@@ -101,6 +105,10 @@ async function buildAiSignalsAndFields(
   } else if (format === 'webp') {
     const chunks = scanWebpMetadata(bytes);
     for (const c of chunks) totalMetadataBytes += c.byteLength;
+    if (chunks.some((c) => c.tag === 'C2PA')) {
+      hasC2pa = true;
+      signals.add('Content Credentials / C2PA provenance manifest detected (C2PA RIFF chunk)');
+    }
   }
 
   return { aiSignals: Array.from(signals), extraFields, totalMetadataBytes, hasC2pa };

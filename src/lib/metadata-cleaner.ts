@@ -25,6 +25,7 @@ const KIND_LABELS: Record<string, string> = {
   iTXt: 'International text chunk',
   eXIf: 'EXIF chunk',
   tIME: 'Modification time chunk',
+  caBX: 'Content Credentials / C2PA manifest chunk',
   iCCP: 'ICC color profile chunk',
   gAMA: 'Gamma chunk',
   cHRM: 'Chromaticity chunk',
@@ -32,6 +33,7 @@ const KIND_LABELS: Record<string, string> = {
   EXIF: 'EXIF chunk',
   'XMP ': 'XMP chunk',
   ICCP: 'ICC color profile chunk',
+  C2PA: 'Content Credentials / C2PA manifest chunk',
   VP8X: 'Extended feature header',
 };
 
@@ -100,10 +102,10 @@ export function describeFormatLimitations(format: ImageFormat, mode: CleanMode):
       notes.push('Every APPn marker and comment is removed, including EXIF, XMP, IPTC and ICC - this can occasionally shift colors slightly in software that relies on an embedded profile.');
     }
   } else if (format === 'png') {
-    notes.push('PNG has no separate "camera EXIF" container distinct from AI-generation text chunks, so AI removal and full removal behave the same for PNG: all tEXt/zTXt/iTXt/eXIf/tIME chunks are stripped.');
+    notes.push('PNG has no separate "camera EXIF" container distinct from AI-generation text chunks, so AI removal and full removal behave the same for PNG: all tEXt/zTXt/iTXt/eXIf/tIME chunks, and any C2PA/Content Credentials manifest (caBX chunk), are stripped.');
     if (mode === 'all') notes.push('Color-management chunks (iCCP/gAMA/cHRM/sRGB) are also removed in Remove All mode.');
   } else if (format === 'webp') {
-    notes.push('WebP metadata lives in EXIF and XMP RIFF chunks, which are removed in both modes.');
+    notes.push('WebP metadata lives in EXIF, XMP and C2PA/Content Credentials RIFF chunks, all of which are removed in both modes.');
     if (mode === 'ai') notes.push('The ICC color profile chunk (ICCP) is preserved in AI-removal mode.');
     else notes.push('The ICC color profile chunk (ICCP) is also removed in Remove All mode.');
   }

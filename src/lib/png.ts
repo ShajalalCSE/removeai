@@ -42,6 +42,11 @@ export function parsePngChunks(bytes: Uint8Array): PngChunk[] {
 
 const METADATA_TEXT_TYPES = new Set(['tEXt', 'zTXt', 'iTXt']);
 const COLOR_MANAGEMENT_TYPES = new Set(['iCCP', 'gAMA', 'cHRM', 'sRGB']);
+// C2PA's PNG embedding spec stores the JUMBF manifest (Content Credentials -
+// provenance claims including "created by"/generator info) in one or more
+// private, unsafe-to-copy "caBX" chunks. These must be stripped explicitly;
+// they are not text/EXIF/color chunks so none of the categories above catch them.
+const C2PA_CHUNK_TYPE = 'caBX';
 
 export interface PngScanEntry {
   type: string;
@@ -62,7 +67,7 @@ export function scanPngMetadata(bytes: Uint8Array): PngScanEntry[] {
         }
       }
       entries.push({ type: chunk.type, keyword, byteLength: chunk.totalLength });
-    } else if (chunk.type === 'eXIf' || chunk.type === 'tIME') {
+    } else if (chunk.type === 'eXIf' || chunk.type === 'tIME' || chunk.type === C2PA_CHUNK_TYPE) {
       entries.push({ type: chunk.type, byteLength: chunk.totalLength });
     } else if (COLOR_MANAGEMENT_TYPES.has(chunk.type)) {
       entries.push({ type: chunk.type, byteLength: chunk.totalLength });
@@ -90,8 +95,9 @@ export function stripPngMetadata(bytes: Uint8Array, options: PngStripOptions): P
   for (const chunk of chunks) {
     const isTextLike = METADATA_TEXT_TYPES.has(chunk.type) || chunk.type === 'eXIf' || chunk.type === 'tIME';
     const isColorMgmt = COLOR_MANAGEMENT_TYPES.has(chunk.type);
+    const isC2pa = chunk.type === C2PA_CHUNK_TYPE;
 
-    if (isTextLike) {
+    if (isTextLike || isC2pa) {
       removed.push(chunk.type);
       continue;
     }

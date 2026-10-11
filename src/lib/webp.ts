@@ -53,7 +53,7 @@ export interface WebpScanEntry {
 
 export function scanWebpMetadata(bytes: Uint8Array): WebpScanEntry[] {
   return parseWebpChunks(bytes)
-    .filter((c) => c.tag === 'EXIF' || c.tag === 'XMP ' || c.tag === 'ICCP')
+    .filter((c) => c.tag === 'EXIF' || c.tag === 'XMP ' || c.tag === 'ICCP' || c.tag === 'C2PA')
     .map((c) => ({ tag: c.tag.trim(), byteLength: c.totalLength }));
 }
 
@@ -87,7 +87,7 @@ export function stripWebpMetadata(bytes: Uint8Array, options: WebpStripOptions):
   for (const chunk of chunks) {
     const raw = bytes.slice(chunk.offset, chunk.offset + chunk.totalLength);
 
-    if (chunk.tag === 'EXIF' || chunk.tag === 'XMP ') {
+    if (chunk.tag === 'EXIF' || chunk.tag === 'XMP ' || chunk.tag === 'C2PA') {
       removed.push(chunk.tag.trim());
       continue;
     }
