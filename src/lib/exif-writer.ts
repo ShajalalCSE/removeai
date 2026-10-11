@@ -63,46 +63,46 @@ export function buildExifTiff(fields: CameraExifFields): BuildTiffResult {
 
   if (fields.make?.trim()) {
     ifd0.push(makeAsciiTag(TAG_MAKE, fields.make.trim()));
-    written.push('Camera Make');
+    written.push('ক্যামেরা মেক');
   }
   if (fields.model?.trim()) {
     ifd0.push(makeAsciiTag(TAG_MODEL, fields.model.trim()));
-    written.push('Camera Model');
+    written.push('ক্যামেরা মডেল');
   }
   if (fields.software?.trim()) {
     ifd0.push(makeAsciiTag(TAG_SOFTWARE, fields.software.trim()));
-    written.push('Software');
+    written.push('সফটওয়্যার');
   }
   if (fields.orientation?.trim()) {
     const code = Number(fields.orientation);
     if (Number.isInteger(code) && code >= 1 && code <= 8) {
       ifd0.push(makeShortTag(TAG_ORIENTATION, code));
-      written.push('Orientation');
+      written.push('ওরিয়েন্টেশন');
     } else {
-      skipped.push({ field: 'Orientation', reason: 'Must be an EXIF orientation code from 1 to 8.' });
+      skipped.push({ field: 'ওরিয়েন্টেশন', reason: '1 থেকে 8-এর মধ্যে একটি EXIF ওরিয়েন্টেশন কোড হতে হবে।' });
     }
   }
   if (fields.lensModel?.trim()) {
     exifIfd.push(makeAsciiTag(TAG_LENS_MODEL, fields.lensModel.trim()));
-    written.push('Lens Model');
+    written.push('লেন্স মডেল');
   }
   if (fields.dateTimeOriginal?.trim()) {
     const exifDate = toExifDateTime(fields.dateTimeOriginal);
     if (exifDate) {
       exifIfd.push(makeAsciiTag(TAG_DATETIME_ORIGINAL, exifDate));
       ifd0.push(makeAsciiTag(TAG_DATETIME, exifDate));
-      written.push('Date and Time');
+      written.push('তারিখ ও সময়');
     } else {
-      skipped.push({ field: 'Date and Time', reason: 'Expected format YYYY-MM-DD HH:mm:ss.' });
+      skipped.push({ field: 'তারিখ ও সময়', reason: 'ফরম্যাট হতে হবে YYYY-MM-DD HH:mm:ss।' });
     }
   }
   if (fields.exposureTime?.trim()) {
     const rational = parseExposureTime(fields.exposureTime);
     if (rational) {
       exifIfd.push(makeRationalTag(TAG_EXPOSURE_TIME, rational[0], rational[1]));
-      written.push('Exposure Time');
+      written.push('এক্সপোজার টাইম');
     } else {
-      skipped.push({ field: 'Exposure Time', reason: 'Expected a fraction like 1/125 or a decimal number of seconds.' });
+      skipped.push({ field: 'এক্সপোজার টাইম', reason: '1/125-এর মতো একটি ভগ্নাংশ বা সেকেন্ডের দশমিক সংখ্যা দিতে হবে।' });
     }
   }
   if (fields.fNumber?.trim()) {
@@ -110,9 +110,9 @@ export function buildExifTiff(fields: CameraExifFields): BuildTiffResult {
     if (isFinite(v) && v > 0) {
       const [num, den] = decimalToRational(v, 10);
       exifIfd.push(makeRationalTag(TAG_FNUMBER, num, den));
-      written.push('Aperture (F-Number)');
+      written.push('অ্যাপারচার (F-Number)');
     } else {
-      skipped.push({ field: 'Aperture (F-Number)', reason: 'Expected a positive number like 1.8.' });
+      skipped.push({ field: 'অ্যাপারচার (F-Number)', reason: '1.8-এর মতো একটি পজিটিভ সংখ্যা দিতে হবে।' });
     }
   }
   if (fields.iso?.trim()) {
@@ -121,7 +121,7 @@ export function buildExifTiff(fields: CameraExifFields): BuildTiffResult {
       exifIfd.push(makeShortTag(TAG_ISO, v));
       written.push('ISO');
     } else {
-      skipped.push({ field: 'ISO', reason: 'Expected a whole number between 1 and 65535.' });
+      skipped.push({ field: 'ISO', reason: '1 থেকে 65535-এর মধ্যে একটি পূর্ণ সংখ্যা দিতে হবে।' });
     }
   }
   if (fields.focalLength?.trim()) {
@@ -129,18 +129,18 @@ export function buildExifTiff(fields: CameraExifFields): BuildTiffResult {
     if (isFinite(v) && v > 0) {
       const [num, den] = decimalToRational(v, 10);
       exifIfd.push(makeRationalTag(TAG_FOCAL_LENGTH, num, den));
-      written.push('Focal Length');
+      written.push('ফোকাল লেংথ');
     } else {
-      skipped.push({ field: 'Focal Length', reason: 'Expected a positive number of millimeters.' });
+      skipped.push({ field: 'ফোকাল লেংথ', reason: 'মিলিমিটারে একটি পজিটিভ সংখ্যা দিতে হবে।' });
     }
   }
   if (fields.flash) {
     exifIfd.push(makeShortTag(TAG_FLASH, fields.flash === 'fired' ? 1 : 0));
-    written.push('Flash');
+    written.push('ফ্ল্যাশ');
   }
   if (fields.whiteBalance) {
     exifIfd.push(makeShortTag(TAG_WHITE_BALANCE, fields.whiteBalance === 'auto' ? 0 : 1));
-    written.push('White Balance');
+    written.push('হোয়াইট ব্যালেন্স');
   }
 
   const tiff = buildTiff(ifd0, exifIfd.length > 0 ? exifIfd : null);
@@ -152,12 +152,12 @@ export async function writeCameraExif(file: File, fields: CameraExifFields): Pro
   const bytes = bufToUint8(buf);
   const format = sniffFormat(bytes);
   if (!format) {
-    throw new Error('Unsupported or unrecognized image format. Only JPEG, PNG and WebP are supported.');
+    throw new Error('ফরম্যাট সাপোর্টেড না বা শনাক্ত করা যায়নি। শুধু JPEG, PNG ও WebP সাপোর্টেড।');
   }
 
   const { tiff, written, skipped } = buildExifTiff(fields);
   if (written.length === 0) {
-    throw new Error('No camera EXIF fields were filled in - nothing to write.');
+    throw new Error('কোনো ক্যামেরা EXIF ফিল্ড পূরণ করা হয়নি - লেখার মতো কিছু নেই।');
   }
 
   let outBytes: Uint8Array;

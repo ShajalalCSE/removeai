@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-// ClearFrame has no accounts system of its own - it delegates entirely to
+// This site has no accounts system of its own - it delegates entirely to
 // Mission Hackers Bangladesh's existing login/signup. The `redirect` query
 // param is a best-effort guess at the convention their Next.js app might
 // read to bounce back here after auth; if their app doesn't honor it, the
@@ -38,7 +38,7 @@ export default function LoginMenu() {
         aria-haspopup="true"
         className="focus-ring rounded-lg border border-ink-200 px-3 py-1.5 text-sm font-medium text-ink-700 transition-colors hover:border-accent-400 dark:border-ink-700 dark:text-ink-200"
       >
-        Login
+        লগইন
       </button>
 
       {open && (
@@ -49,20 +49,20 @@ export default function LoginMenu() {
           <div className="flex items-center gap-2 border-b border-ink-100 pb-3 dark:border-ink-800">
             <img src="/mission-hackers-logo.png" alt="" aria-hidden="true" className="h-8 w-8 rounded-full" />
             <div>
-              <p className="text-sm font-semibold text-ink-900 dark:text-white">Mission Hackers account</p>
-              <p className="text-xs text-ink-500 dark:text-ink-400">Sign in with your missionhacker.com login</p>
+              <p className="text-sm font-semibold text-ink-900 dark:text-white">Mission Hackers অ্যাকাউন্ট</p>
+              <p className="text-xs text-ink-500 dark:text-ink-400">আপনার missionhacker.com লগইন দিয়ে সাইন ইন করুন</p>
             </div>
           </div>
           <a
             href={LOGIN_URL}
             className="focus-ring mt-3 block rounded-lg bg-ink-900 px-3.5 py-2 text-center text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 dark:bg-accent-600"
           >
-            Log in with Mission Hacker
+            Mission Hacker দিয়ে লগইন করুন
           </a>
           <p className="mt-3 text-center text-xs text-ink-500 dark:text-ink-400">
-            Don't have an account?{' '}
+            অ্যাকাউন্ট নেই?{' '}
             <a href={REGISTER_URL} className="font-medium text-accent-600 underline hover:text-accent-700 dark:text-accent-400">
-              Create one
+              একটি তৈরি করুন
             </a>
           </p>
         </div>

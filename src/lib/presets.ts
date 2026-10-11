@@ -21,7 +21,7 @@ export const PIXEL_7_PRESET_ID = 'google-pixel-7';
 export const CAMERA_PRESETS: CameraPreset[] = [
   {
     id: PIXEL_7_PRESET_ID,
-    name: 'Google Pixel 7 (simulated)',
+    name: 'Google Pixel 7 (সিমুলেটেড)',
     fields: {
       make: 'Google',
       model: 'Pixel 7',
@@ -38,7 +38,7 @@ export const CAMERA_PRESETS: CameraPreset[] = [
   },
   {
     id: 'iphone-15-pro',
-    name: 'iPhone 15 Pro (simulated)',
+    name: 'iPhone 15 Pro (সিমুলেটেড)',
     fields: {
       make: 'Apple',
       model: 'iPhone 15 Pro',
@@ -55,7 +55,7 @@ export const CAMERA_PRESETS: CameraPreset[] = [
   },
   {
     id: 'canon-eos-r5',
-    name: 'Canon EOS R5 (simulated)',
+    name: 'Canon EOS R5 (সিমুলেটেড)',
     fields: {
       make: 'Canon',
       model: 'Canon EOS R5',
@@ -72,7 +72,7 @@ export const CAMERA_PRESETS: CameraPreset[] = [
   },
   {
     id: 'sony-a7-iv',
-    name: 'Sony A7 IV (simulated)',
+    name: 'Sony A7 IV (সিমুলেটেড)',
     fields: {
       make: 'Sony',
       model: 'ILCE-7M4',
@@ -89,7 +89,7 @@ export const CAMERA_PRESETS: CameraPreset[] = [
   },
   {
     id: 'generic-dslr',
-    name: 'Generic DSLR (simulated)',
+    name: 'Generic DSLR (সিমুলেটেড)',
     fields: {
       make: 'Generic Camera Co.',
       model: 'DSLR-1000',

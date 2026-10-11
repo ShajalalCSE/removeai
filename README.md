@@ -1,4 +1,4 @@
-# ClearFrame
+# Mission Hackers Bangladesh — AI Metadata Removal
 
 A static, client-side image metadata tool: remove AI-generator fingerprints and
 other hidden metadata from JPEG/PNG/WebP images, inspect what's embedded

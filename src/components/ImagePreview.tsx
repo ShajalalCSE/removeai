@@ -15,7 +15,7 @@ export default function ImagePreview({ previewUrl, filename, width, height, byte
     <div className="flex gap-3">
       <img
         src={previewUrl}
-        alt={`Preview of ${filename}`}
+        alt={`${filename}-এর প্রিভিউ`}
         className="h-20 w-20 flex-shrink-0 rounded-lg border border-ink-100 object-cover dark:border-ink-800"
       />
       <div className="min-w-0 flex-1">

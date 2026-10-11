@@ -26,7 +26,7 @@ export function isWebp(bytes: Uint8Array): boolean {
 }
 
 export function parseWebpChunks(bytes: Uint8Array): WebpChunk[] {
-  if (!isWebp(bytes)) throw new Error('Not a valid WebP file (bad RIFF/WEBP header).');
+  if (!isWebp(bytes)) throw new Error('একটি সঠিক WebP ফাইল না (ভুল RIFF/WEBP হেডার)।');
   const chunks: WebpChunk[] = [];
   let offset = 12;
   while (offset + 8 <= bytes.length) {

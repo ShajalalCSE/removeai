@@ -35,13 +35,13 @@ export function isJpeg(bytes: Uint8Array): boolean {
 
 /** Walk all marker segments up to (and including) SOS. Throws if the buffer isn't a well-formed JPEG. */
 export function parseJpegSegments(bytes: Uint8Array): { segments: JpegSegment[]; scanDataStart: number } {
-  if (!isJpeg(bytes)) throw new Error('Not a valid JPEG file (missing SOI marker).');
+  if (!isJpeg(bytes)) throw new Error('একটি সঠিক JPEG ফাইল না (SOI মার্কার নেই)।');
   const segments: JpegSegment[] = [];
   let offset = 2; // past SOI
 
   while (offset < bytes.length - 1) {
     if (bytes[offset] !== 0xff) {
-      throw new Error('Malformed JPEG: expected marker byte 0xFF.');
+      throw new Error('ত্রুটিপূর্ণ JPEG: মার্কার বাইট 0xFF প্রত্যাশিত ছিল।');
     }
     const marker = bytes[offset + 1];
 
@@ -72,7 +72,7 @@ export function parseJpegSegments(bytes: Uint8Array): { segments: JpegSegment[];
     offset = dataStart + dataLength;
   }
 
-  throw new Error('Malformed JPEG: no SOS (start of scan) marker found.');
+  throw new Error('ত্রুটিপূর্ণ JPEG: SOS (start of scan) মার্কার পাওয়া যায়নি।');
 }
 
 export const APP1_EXIF_SIGNATURE = 'Exif\0\0';

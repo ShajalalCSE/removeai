@@ -7,7 +7,7 @@ interface DownloadButtonProps {
   variant?: 'primary' | 'secondary';
 }
 
-export default function DownloadButton({ blob, filename, label = 'Download', variant = 'primary' }: DownloadButtonProps) {
+export default function DownloadButton({ blob, filename, label = 'ডাউনলোড করুন', variant = 'primary' }: DownloadButtonProps) {
   const base = 'focus-ring inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-soft transition-transform hover:-translate-y-0.5';
   const styles =
     variant === 'primary'

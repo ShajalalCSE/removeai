@@ -25,7 +25,7 @@ export function isPng(bytes: Uint8Array): boolean {
 }
 
 export function parsePngChunks(bytes: Uint8Array): PngChunk[] {
-  if (!isPng(bytes)) throw new Error('Not a valid PNG file (bad signature).');
+  if (!isPng(bytes)) throw new Error('একটি সঠিক PNG ফাইল না (ভুল সিগনেচার)।');
   const chunks: PngChunk[] = [];
   let offset = 8;
   while (offset + 8 <= bytes.length) {

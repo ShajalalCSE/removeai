@@ -1,31 +1,31 @@
 const FAQS: [string, string][] = [
   [
-    'Does "Remove AI Metadata" guarantee an image can no longer be detected as AI-generated?',
-    'No. It removes the metadata fields that commonly identify a generator or provenance scheme - the XMP block, Content Credentials/C2PA manifest, IPTC/Photoshop data, and the EXIF Software tag - while keeping other camera EXIF intact. AI-image detection that works from the pixels themselves (statistical or model-based detectors) is a completely different technique and is unaffected by metadata changes either way. We make no claim about detectability based on pixel analysis.',
+    '"AI মেটাডেটা রিমুভ করুন" ব্যবহার করলে কি নিশ্চিত হয় যে ছবিটি আর AI-জেনারেটেড হিসেবে শনাক্ত করা যাবে না?',
+    'না। এটি সেই মেটাডেটা ফিল্ডগুলো রিমুভ করে যা সাধারণত জেনারেটর বা প্রোভেন্যান্স স্কিম শনাক্ত করে - XMP ব্লক, Content Credentials/C2PA ম্যানিফেস্ট, IPTC/Photoshop ডেটা, এবং EXIF Software ট্যাগ - বাকি ক্যামেরা EXIF অক্ষত রেখে। পিক্সেল বিশ্লেষণ করে AI-ছবি শনাক্তকরণ (স্ট্যাটিস্টিক্যাল বা মডেল-বেজড ডিটেক্টর) সম্পূর্ণ ভিন্ন একটি পদ্ধতি এবং মেটাডেটা পরিবর্তনে এটি প্রভাবিত হয় না। পিক্সেল বিশ্লেষণের ভিত্তিতে শনাক্তযোগ্যতা নিয়ে আমরা কোনো দাবি করি না।',
   ],
   [
-    'Does this re-compress or degrade my image?',
-    "No. JPEG, PNG and WebP metadata is removed by directly rewriting each format's container structure (JPEG markers, PNG chunks, WebP RIFF chunks) and copying the pixel data through unchanged. Nothing is decoded and re-encoded through a canvas, so there is no generation loss and dimensions are always preserved.",
+    'এটি কি আমার ছবি রি-কম্প্রেস বা খারাপ করে দেয়?',
+    'না। JPEG, PNG ও WebP-এর মেটাডেটা প্রতিটি ফরম্যাটের কন্টেইনার স্ট্রাকচার সরাসরি পরিবর্তন করে রিমুভ করা হয় (JPEG মার্কার, PNG চাংক, WebP RIFF চাংক) এবং পিক্সেল ডেটা অপরিবর্তিত কপি করা হয়। কোনো কিছু ক্যানভাসের মাধ্যমে ডিকোড ও রি-এনকোড করা হয় না, তাই কোনো জেনারেশন লস হয় না এবং ডাইমেনশন সবসময় অক্ষুণ্ণ থাকে।',
   ],
   [
-    "What's the difference between 'Remove AI Metadata' and 'Remove All Metadata'?",
-    "AI Metadata mode removes XMP, C2PA/Content Credentials, IPTC/Photoshop data and the EXIF Software tag, but keeps other camera EXIF (make, model, exposure, GPS, etc.) and the ICC color profile. Remove All strips every metadata segment/chunk the format supports, including all EXIF and, in PNG/WebP, the color profile too.",
+    "'AI মেটাডেটা রিমুভ করুন' আর 'সব মেটাডেটা রিমুভ করুন'-এর মধ্যে পার্থক্য কী?",
+    'AI মেটাডেটা মোড XMP, C2PA/Content Credentials, IPTC/Photoshop ডেটা ও EXIF Software ট্যাগ রিমুভ করে, কিন্তু বাকি ক্যামেরা EXIF (make, model, exposure, GPS, ইত্যাদি) ও ICC কালার প্রোফাইল রেখে দেয়। Remove All মোড ফরম্যাট যা যা সাপোর্ট করে তার প্রতিটি মেটাডেটা সেগমেন্ট/চাংক রিমুভ করে, সব EXIF-সহ, এবং PNG/WebP-তে কালার প্রোফাইলও।',
   ],
   [
-    'Can I add fake camera information to an image?',
-    "You can write EXIF fields like camera make/model, lens, exposure and so on through the Camera EXIF Editor, including from a few illustrative presets. These are clearly marked as user-supplied or simulated. We don't present them as verified facts about how an image was captured, and we never auto-generate GPS coordinates, serial numbers or capture history.",
+    'আমি কি একটি ছবিতে ভুয়া ক্যামেরা তথ্য যোগ করতে পারি?',
+    'Camera EXIF Editor দিয়ে আপনি ক্যামেরার make/model, লেন্স, এক্সপোজার ইত্যাদি EXIF ফিল্ড লিখতে পারেন, এমনকি কয়েকটি উদাহরণস্বরূপ প্রিসেট থেকেও। এগুলো স্পষ্টভাবে ইউজার-সাপ্লাইড বা সিমুলেটেড হিসেবে চিহ্নিত। আমরা এগুলোকে ছবি কীভাবে তোলা হয়েছে তার ভেরিফায়েড তথ্য হিসেবে উপস্থাপন করি না, এবং কখনোই GPS কোঅর্ডিনেট, সিরিয়াল নম্বর বা ক্যাপচার হিস্ট্রি অটোমেটিক্যালি তৈরি করি না।',
   ],
   [
-    'Why does PNG handle metadata differently from JPEG?',
-    "PNG doesn't have a format-level distinction between 'camera EXIF' and 'AI-generation metadata' the way JPEG's EXIF/XMP segments do - tools like Stable Diffusion WebUI and ComfyUI simply write their generation parameters into generic tEXt/iTXt text chunks. Because there's no reliable way to tell those apart from genuine camera data in PNG, both removal modes strip all text/XMP/EXIF chunks for PNG.",
+    'PNG কেন JPEG থেকে আলাদাভাবে মেটাডেটা হ্যান্ডেল করে?',
+    "PNG-তে JPEG-এর EXIF/XMP সেগমেন্টের মতো 'camera EXIF' আর 'AI-generation metadata'-এর মধ্যে ফরম্যাট-লেভেল কোনো পার্থক্য নেই - Stable Diffusion WebUI ও ComfyUI-এর মতো টুল তাদের জেনারেশন প্যারামিটার সাধারণ tEXt/iTXt টেক্সট চাংকে লিখে দেয়। PNG-তে এগুলোকে সত্যিকারের ক্যামেরা ডেটা থেকে নির্ভরযোগ্যভাবে আলাদা করার কোনো উপায় নেই বলে, দুটি রিমুভাল মোডই PNG-এর সব text/XMP/EXIF চাংক রিমুভ করে।",
   ],
   [
-    'What happens to unsupported fields or formats?',
-    'If a field cannot be reliably written or a chunk cannot be parsed, the tool reports it explicitly as skipped (with a reason) rather than silently doing nothing or claiming success. You can see exactly what was written, removed, preserved, or skipped for every operation.',
+    'সাপোর্টেড না এমন ফিল্ড বা ফরম্যাটের ক্ষেত্রে কী হয়?',
+    'কোনো ফিল্ড নির্ভরযোগ্যভাবে লেখা না গেলে বা কোনো চাংক পার্স করা না গেলে, টুলটি চুপচাপ কিছু না করে বা সফল হওয়ার দাবি না করে সেটি স্পষ্টভাবে স্কিপড হিসেবে (কারণসহ) রিপোর্ট করে। প্রতিটি অপারেশনে ঠিক কী লেখা হয়েছে, রিমুভ হয়েছে, সংরক্ষিত আছে, বা স্কিপ হয়েছে তা আপনি দেখতে পারেন।',
   ],
   [
-    'Do you support HEIC, TIFF, or other formats?',
-    'Not currently. JPEG, PNG and WebP cover the vast majority of AI-image-generator outputs and were chosen because their metadata structures can be parsed and rewritten losslessly and reliably in a browser.',
+    'আপনারা কি HEIC, TIFF বা অন্য ফরম্যাট সাপোর্ট করেন?',
+    'এখনো করি না। AI-ইমেজ-জেনারেটরের বেশিরভাগ আউটপুট JPEG, PNG ও WebP-তে হয়, আর এই তিনটি ফরম্যাট বেছে নেওয়া হয়েছে কারণ ব্রাউজারে এদের মেটাডেটা স্ট্রাকচার লসলেসভাবে ও নির্ভরযোগ্যভাবে পার্স ও রিরাইট করা যায়।',
   ],
 ];
 
@@ -33,12 +33,12 @@ import { useEffect } from 'react';
 
 export default function Faq() {
   useEffect(() => {
-    document.title = 'FAQ — ClearFrame';
+    document.title = 'FAQ — Mission Hackers Bangladesh';
   }, []);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
-      <h1 className="text-3xl font-extrabold tracking-tight text-ink-900 dark:text-white">Frequently asked questions</h1>
+      <h1 className="text-3xl font-extrabold tracking-tight text-ink-900 dark:text-white">প্রায়শই জিজ্ঞাসিত প্রশ্ন</h1>
       <div className="mt-8 divide-y divide-ink-100 dark:divide-ink-800">
         {FAQS.map(([q, a], i) => (
           <details key={i} className="group py-5">

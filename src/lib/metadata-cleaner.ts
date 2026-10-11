@@ -11,30 +11,30 @@ import { stripPngMetadata } from './png';
 import { stripWebpMetadata } from './webp';
 
 const KIND_LABELS: Record<string, string> = {
-  exif: 'EXIF (camera data)',
+  exif: 'EXIF (ক্যামেরা তথ্য)',
   xmp: 'XMP',
   iptc: 'IPTC / Photoshop IRB',
-  icc: 'ICC color profile',
-  c2pa: 'Content Credentials / C2PA manifest',
-  adobe: 'Adobe APP14 marker',
-  jfif: 'JFIF header',
-  comment: 'JPEG comment',
-  'other-app': 'Application-specific marker',
-  tEXt: 'Text chunk',
-  zTXt: 'Compressed text chunk',
-  iTXt: 'International text chunk',
-  eXIf: 'EXIF chunk',
-  tIME: 'Modification time chunk',
-  caBX: 'Content Credentials / C2PA manifest chunk',
-  iCCP: 'ICC color profile chunk',
-  gAMA: 'Gamma chunk',
-  cHRM: 'Chromaticity chunk',
-  sRGB: 'sRGB chunk',
-  EXIF: 'EXIF chunk',
-  'XMP ': 'XMP chunk',
-  ICCP: 'ICC color profile chunk',
-  C2PA: 'Content Credentials / C2PA manifest chunk',
-  VP8X: 'Extended feature header',
+  icc: 'ICC কালার প্রোফাইল',
+  c2pa: 'Content Credentials / C2PA ম্যানিফেস্ট',
+  adobe: 'Adobe APP14 মার্কার',
+  jfif: 'JFIF হেডার',
+  comment: 'JPEG কমেন্ট',
+  'other-app': 'অ্যাপ্লিকেশন-স্পেসিফিক মার্কার',
+  tEXt: 'টেক্সট চাংক',
+  zTXt: 'কমপ্রেসড টেক্সট চাংক',
+  iTXt: 'ইন্টারন্যাশনাল টেক্সট চাংক',
+  eXIf: 'EXIF চাংক',
+  tIME: 'মডিফিকেশন টাইম চাংক',
+  caBX: 'Content Credentials / C2PA ম্যানিফেস্ট চাংক',
+  iCCP: 'ICC কালার প্রোফাইল চাংক',
+  gAMA: 'গামা চাংক',
+  cHRM: 'ক্রোমাটিসিটি চাংক',
+  sRGB: 'sRGB চাংক',
+  EXIF: 'EXIF চাংক',
+  'XMP ': 'XMP চাংক',
+  ICCP: 'ICC কালার প্রোফাইল চাংক',
+  C2PA: 'Content Credentials / C2PA ম্যানিফেস্ট চাংক',
+  VP8X: 'এক্সটেন্ডেড ফিচার হেডার',
 };
 
 function label(kind: string): string {
@@ -46,7 +46,7 @@ export async function cleanImage(file: File, mode: CleanMode): Promise<CleanResu
   const bytes = bufToUint8(buf);
   const format = sniffFormat(bytes);
   if (!format) {
-    throw new Error('Unsupported or unrecognized image format. Only JPEG, PNG and WebP are supported.');
+    throw new Error('ফরম্যাট সাপোর্টেড না বা শনাক্ত করা যায়নি। শুধু JPEG, PNG ও WebP সাপোর্টেড।');
   }
 
   let removed: string[] = [];
@@ -95,19 +95,19 @@ function dedupeLabeled(kinds: string[]): string[] {
 export function describeFormatLimitations(format: ImageFormat, mode: CleanMode): string[] {
   const notes: string[] = [];
   if (format === 'jpeg') {
-    notes.push('The ICC color profile and JFIF/Adobe structural markers are kept so colors render correctly in every viewer.');
+    notes.push('ICC কালার প্রোফাইল ও JFIF/Adobe স্ট্রাকচারাল মার্কার রাখা হয়েছে, যাতে সব ভিউয়ারে রং ঠিকভাবে দেখা যায়।');
     if (mode === 'ai') {
-      notes.push('Camera EXIF (make, model, exposure, GPS, etc.) is preserved. Only the Software tag, XMP, IPTC/Photoshop and C2PA/Content-Credentials data are removed.');
+      notes.push('ক্যামেরার EXIF (make, model, exposure, GPS, ইত্যাদি) সংরক্ষিত থাকে। শুধু Software ট্যাগ, XMP, IPTC/Photoshop ও C2PA/Content-Credentials ডেটা রিমুভ করা হয়।');
     } else {
-      notes.push('Every APPn marker and comment is removed, including EXIF, XMP, IPTC and ICC - this can occasionally shift colors slightly in software that relies on an embedded profile.');
+      notes.push('EXIF, XMP, IPTC ও ICC সহ প্রতিটি APPn মার্কার ও কমেন্ট রিমুভ করা হয় - এতে এমবেডেড প্রোফাইলের উপর নির্ভরশীল সফটওয়্যারে মাঝে মাঝে সামান্য রং বদলাতে পারে।');
     }
   } else if (format === 'png') {
-    notes.push('PNG has no separate "camera EXIF" container distinct from AI-generation text chunks, so AI removal and full removal behave the same for PNG: all tEXt/zTXt/iTXt/eXIf/tIME chunks, and any C2PA/Content Credentials manifest (caBX chunk), are stripped.');
-    if (mode === 'all') notes.push('Color-management chunks (iCCP/gAMA/cHRM/sRGB) are also removed in Remove All mode.');
+    notes.push('PNG-তে AI-জেনারেশন টেক্সট চাংক থেকে আলাদা কোনো "camera EXIF" কনটেইনার নেই, তাই PNG-তে AI রিমুভাল ও ফুল রিমুভাল একই রকম আচরণ করে: সব tEXt/zTXt/iTXt/eXIf/tIME চাংক, এবং যেকোনো C2PA/Content Credentials ম্যানিফেস্ট (caBX চাংক) রিমুভ করা হয়।');
+    if (mode === 'all') notes.push('Remove All মোডে কালার-ম্যানেজমেন্ট চাংকও (iCCP/gAMA/cHRM/sRGB) রিমুভ করা হয়।');
   } else if (format === 'webp') {
-    notes.push('WebP metadata lives in EXIF, XMP and C2PA/Content Credentials RIFF chunks, all of which are removed in both modes.');
-    if (mode === 'ai') notes.push('The ICC color profile chunk (ICCP) is preserved in AI-removal mode.');
-    else notes.push('The ICC color profile chunk (ICCP) is also removed in Remove All mode.');
+    notes.push('WebP-এর মেটাডেটা থাকে EXIF, XMP ও C2PA/Content Credentials RIFF চাংকে, যা দুই মোডেই রিমুভ করা হয়।');
+    if (mode === 'ai') notes.push('AI-রিমুভাল মোডে ICC কালার প্রোফাইল চাংক (ICCP) সংরক্ষিত থাকে।');
+    else notes.push('Remove All মোডে ICC কালার প্রোফাইল চাংকও (ICCP) রিমুভ করা হয়।');
   }
   return notes;
 }

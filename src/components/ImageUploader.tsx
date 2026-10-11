@@ -9,13 +9,13 @@ interface ImageUploaderProps {
 
 function validateFile(file: File): string | null {
   if (!ACCEPTED_MIME_TYPES.includes(file.type)) {
-    return `"${file.name}" is not a supported format. Please use JPEG, PNG or WebP.`;
+    return `"${file.name}" সাপোর্টেড ফরম্যাট না। অনুগ্রহ করে JPEG, PNG বা WebP ব্যবহার করুন।`;
   }
   if (file.size > MAX_FILE_SIZE_BYTES) {
-    return `"${file.name}" is too large (${formatBytesLabel(file.size)}). The limit is ${formatBytesLabel(MAX_FILE_SIZE_BYTES)} per image.`;
+    return `"${file.name}" সাইজে অনেক বড় (${formatBytesLabel(file.size)})। প্রতিটি ছবির সর্বোচ্চ সীমা ${formatBytesLabel(MAX_FILE_SIZE_BYTES)}।`;
   }
   if (file.size === 0) {
-    return `"${file.name}" appears to be empty.`;
+    return `"${file.name}" খালি মনে হচ্ছে।`;
   }
   return null;
 }
@@ -98,10 +98,10 @@ export default function ImageUploader({ onFilesAdded, disabled }: ImageUploaderP
           </svg>
         </div>
         <p className="text-base font-semibold text-ink-900 dark:text-white">
-          Drag &amp; drop images here, or click to browse
+          ছবি এখানে টেনে এনে ছাড়ুন, বা ব্রাউজ করতে ক্লিক করুন
         </p>
         <p id={`${inputId}-help`} className="mt-1.5 text-sm text-ink-500 dark:text-ink-400">
-          JPEG, PNG or WebP · up to {formatBytesLabel(MAX_FILE_SIZE_BYTES)} each · processed entirely on your device
+          JPEG, PNG বা WebP · প্রতিটি সর্বোচ্চ {formatBytesLabel(MAX_FILE_SIZE_BYTES)} · সম্পূর্ণ আপনার ডিভাইসেই প্রসেস হয়
         </p>
         <input
           ref={inputRef}

@@ -18,7 +18,7 @@ export default function Home() {
   const resultsRef = useRef(new Map<string, { blob: Blob; filename: string }>());
 
   useEffect(() => {
-    document.title = 'ClearFrame — Remove AI & Hidden Metadata From Your Images';
+    document.title = 'Mission Hackers Bangladesh — AI মেটাডেটা রিমুভাল টুল';
   }, []);
 
   const addFiles = useCallback(async (files: File[]) => {
@@ -42,7 +42,7 @@ export default function Home() {
       } catch (err) {
         setLoadErrors((prev) => [
           ...prev,
-          `"${file.name}": ${err instanceof Error ? err.message : 'could not be read.'}`,
+          `"${file.name}": ${err instanceof Error ? err.message : 'পড়া যায়নি।'}`,
         ]);
       }
     }
@@ -76,21 +76,21 @@ export default function Home() {
     <div>
       <section className="mx-auto max-w-6xl px-4 pb-10 pt-12 text-center sm:px-6 sm:pt-16">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-100 px-3 py-1 text-xs font-semibold text-accent-800 dark:bg-accent-900/40 dark:text-accent-200">
-          100% client-side · nothing is ever uploaded
+          100% ক্লায়েন্ট-সাইড · কোনো ছবি কখনো আপলোড হয় না
         </span>
         <h1 className="mx-auto mt-5 max-w-2xl text-4xl font-extrabold tracking-tight text-ink-900 dark:text-white sm:text-5xl">
-          Strip AI tags and hidden metadata from your images, in your browser
+          আপনার ব্রাউজারেই ছবি থেকে AI ট্যাগ ও লুকানো মেটাডেটা রিমুভ করুন
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-base text-ink-500 dark:text-ink-400">
-          Upload a JPEG, PNG or WebP, inspect exactly what's embedded in it, and remove AI-generator fingerprints
-          or every trace of metadata - without ever leaving your device.
+          একটি JPEG, PNG বা WebP আপলোড করুন, এতে ঠিক কী কী তথ্য লুকানো আছে দেখুন, আর AI-জেনারেটরের ছাপ বা সব ধরনের
+          মেটাডেটা মুছে ফেলুন - আপনার ডিভাইস থেকে ছবি কখনো বাইরে না গিয়েই।
         </p>
 
         <div className="mx-auto mt-6 grid max-w-xl grid-cols-3 gap-3 text-sm">
           {[
-            ['1', 'Upload'],
-            ['2', 'Process'],
-            ['3', 'Download'],
+            ['1', 'আপলোড'],
+            ['2', 'প্রসেস'],
+            ['3', 'ডাউনলোড'],
           ].map(([n, label]) => (
             <div key={n} className="flex flex-col items-center gap-1.5 rounded-xl border border-ink-100 bg-white p-3 dark:border-ink-800 dark:bg-ink-900">
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ink-900 text-xs font-bold text-white dark:bg-accent-600">
@@ -116,16 +116,14 @@ export default function Home() {
       {images.length > 0 && (
         <section className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-bold text-ink-900 dark:text-white">
-              {images.length} image{images.length > 1 ? 's' : ''}
-            </h2>
+            <h2 className="text-lg font-bold text-ink-900 dark:text-white">{images.length}টি ছবি</h2>
             {hasResults && (
               <button
                 type="button"
                 onClick={downloadAll}
                 className="focus-ring rounded-lg border border-ink-200 bg-white px-3.5 py-2 text-sm font-semibold text-ink-700 hover:border-accent-400 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-200"
               >
-                Download all processed
+                সবগুলো প্রসেস করা ছবি ডাউনলোড করুন
               </button>
             )}
           </div>
@@ -138,12 +136,12 @@ export default function Home() {
       )}
 
       <section className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-        <h2 className="text-lg font-bold text-ink-900 dark:text-white">Your privacy, by construction</h2>
+        <h2 className="text-lg font-bold text-ink-900 dark:text-white">আপনার প্রাইভেসি, গঠনগতভাবেই নিশ্চিত</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           {[
-            ['No uploads', 'Every read, clean and edit operation runs on raw bytes in your browser or a Web Worker - files never touch a network request.'],
-            ['No recompression', 'Metadata is removed by rewriting file structure directly, not by re-encoding pixels through a canvas, so image quality is untouched.'],
-            ['Nothing stored', 'Nothing persists after you close or refresh the tab. There is no server, database or analytics pipeline to store your images.'],
+            ['কোনো আপলোড নেই', 'রিড, ক্লিন ও এডিট - প্রতিটি অপারেশন আপনার ব্রাউজারে বা একটি Web Worker-এ raw বাইটের উপর চলে - ফাইল কখনো নেটওয়ার্ক রিকোয়েস্টের মধ্য দিয়ে যায় না।'],
+            ['কোনো রি-কম্প্রেশন নেই', 'ক্যানভাসের মাধ্যমে পিক্সেল রি-এনকোড না করে সরাসরি ফাইল স্ট্রাকচার পরিবর্তন করে মেটাডেটা রিমুভ করা হয়, তাই ছবির কোয়ালিটি অক্ষুণ্ণ থাকে।'],
+            ['কিছুই সংরক্ষিত হয় না', 'ট্যাব বন্ধ বা রিফ্রেশ করলে কিছুই থাকে না। আপনার ছবি জমা রাখার জন্য কোনো সার্ভার, ডেটাবেস বা অ্যানালিটিক্স পাইপলাইন নেই।'],
           ].map(([title, body]) => (
             <div key={title} className="rounded-xl border border-ink-100 bg-white p-4 dark:border-ink-800 dark:bg-ink-900">
               <h3 className="text-sm font-semibold text-ink-900 dark:text-white">{title}</h3>

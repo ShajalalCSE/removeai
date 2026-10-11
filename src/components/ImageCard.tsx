@@ -35,7 +35,7 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
       setCleanResult(result);
       onResultReady?.(image.id, result.blob, buildOutputFilename(image.file.name, result.format, cleanModeSuffix(result.mode)));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong while processing this image.');
+      setError(err instanceof Error ? err.message : 'এই ছবিটি প্রসেস করার সময় কিছু একটা সমস্যা হয়েছে।');
     } finally {
       setProcessingMode(null);
     }
@@ -51,7 +51,7 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
       onResultReady?.(image.id, result.blob, buildOutputFilename(image.file.name, result.format, 'exif-edited'));
       if (mode === 'pixel-preset') setTab('exif');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not write EXIF data to this image.');
+      setError(err instanceof Error ? err.message : 'এই ছবিতে EXIF ডেটা লেখা যায়নি।');
     } finally {
       setProcessingMode(null);
     }
@@ -81,7 +81,7 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
         <button
           type="button"
           onClick={() => onRemove(image.id)}
-          aria-label={`Remove ${image.file.name}`}
+          aria-label={`${image.file.name} সরান`}
           className="focus-ring flex-shrink-0 rounded-md p-1.5 text-ink-400 hover:bg-ink-100 hover:text-ink-700 dark:hover:bg-ink-800 dark:hover:text-white"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -92,7 +92,7 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
 
       {image.originalReport.aiSignals.length > 0 && (
         <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
-          {image.originalReport.aiSignals.length} metadata signal{image.originalReport.aiSignals.length > 1 ? 's' : ''} found - see details below
+          {image.originalReport.aiSignals.length}টি মেটাডেটা সিগন্যাল পাওয়া গেছে - নিচে বিস্তারিত দেখুন
         </p>
       )}
 
@@ -104,16 +104,16 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
           className="focus-ring relative flex flex-col items-start gap-0.5 rounded-lg bg-ink-900 p-3 text-left shadow-soft transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0 dark:bg-accent-600"
         >
           <span className="absolute -top-2 right-2 rounded-full bg-accent-500 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
-            Recommended
+            রেকমেন্ডেড
           </span>
           <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-white">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="flex-shrink-0">
               <path d="M12 3v3m0 12v3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1M3 12h3m12 0h3M5.6 18.4l2.1-2.1m8.6-8.6 2.1-2.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
               <circle cx="12" cy="12" r="3" fill="currentColor" />
             </svg>
-            Remove AI Metadata
+            AI মেটাডেটা রিমুভ করুন
           </span>
-          <span className="text-xs text-white/70">Strips AI tags, keeps your camera info</span>
+          <span className="text-xs text-white/70">AI ট্যাগ মুছে দেয়, ক্যামেরার তথ্য রাখে</span>
         </button>
 
         <button
@@ -126,9 +126,9 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="flex-shrink-0">
               <path d="M4 7h16M9 7V4.5A1.5 1.5 0 0 1 10.5 3h3A1.5 1.5 0 0 1 15 4.5V7m2 0 -.7 12.3A2 2 0 0 1 14.3 21H9.7a2 2 0 0 1-2-1.7L7 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            Remove All Metadata
+            সব মেটাডেটা রিমুভ করুন
           </span>
-          <span className="text-xs text-red-700/70 dark:text-red-300/70">Strips everything, including camera info</span>
+          <span className="text-xs text-red-700/70 dark:text-red-300/70">ক্যামেরার তথ্যসহ সবকিছু মুছে দেয়</span>
         </button>
 
         <button
@@ -142,9 +142,9 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
               <path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h2l1-1.5h7l1 1.5h2A1.5 1.5 0 0 1 20 8.5v9A1.5 1.5 0 0 1 18.5 19h-13A1.5 1.5 0 0 1 4 17.5v-9Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
               <circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="1.6" />
             </svg>
-            Camera Data Adding
+            ক্যামেরা ডেটা যোগ করুন
           </span>
-          <span className="text-xs text-accent-800/70 dark:text-accent-200/70">1-click Pixel 7 info, no typing</span>
+          <span className="text-xs text-accent-800/70 dark:text-accent-200/70">1-ক্লিকে Pixel 7-এর তথ্য, টাইপ করার দরকার নেই</span>
         </button>
 
         <button
@@ -154,9 +154,9 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
           className="focus-ring flex flex-col items-start gap-0.5 rounded-lg border border-ink-200 bg-white p-3 text-left transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 dark:border-ink-700 dark:bg-ink-900"
         >
           <span className="text-sm font-semibold text-ink-700 dark:text-ink-200">
-            {tab === 'exif' ? 'Hide Manual Editor' : 'Manual EXIF Editor'}
+            {tab === 'exif' ? 'ম্যানুয়াল এডিটর লুকান' : 'ম্যানুয়াল EXIF এডিটর'}
           </span>
-          <span className="text-xs text-ink-500 dark:text-ink-400">Type your own camera details</span>
+          <span className="text-xs text-ink-500 dark:text-ink-400">নিজের ক্যামেরার তথ্য টাইপ করুন</span>
         </button>
       </div>
 
@@ -171,10 +171,10 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
           <ProcessingStatus
             label={
               processingMode === 'exif'
-                ? 'Writing EXIF data…'
+                ? 'EXIF ডেটা লেখা হচ্ছে…'
                 : processingMode === 'pixel-preset'
-                  ? 'Adding Pixel 7 camera data…'
-                  : 'Processing image…'
+                  ? 'Pixel 7 ক্যামেরা ডেটা যোগ হচ্ছে…'
+                  : 'ছবি প্রসেস হচ্ছে…'
             }
           />
         </div>
@@ -193,7 +193,7 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
           {exifResult && (
             <div className="mt-4 space-y-2 rounded-lg border border-ink-100 p-3 dark:border-ink-800">
               <p className="text-xs font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">
-                Written ({exifResult.written.length})
+                লেখা হয়েছে ({exifResult.written.length})
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {exifResult.written.map((w, i) => (
@@ -204,7 +204,7 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
               </div>
               {exifResult.skipped.length > 0 && (
                 <>
-                  <p className="pt-1 text-xs font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">Skipped</p>
+                  <p className="pt-1 text-xs font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">স্কিপড</p>
                   <ul className="space-y-1 text-sm text-ink-600 dark:text-ink-300">
                     {exifResult.skipped.map((s, i) => (
                       <li key={i}>
