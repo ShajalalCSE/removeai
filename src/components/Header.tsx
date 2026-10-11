@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import LoginMenu from './LoginMenu';
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   `text-sm font-medium transition-colors focus-ring rounded-md px-2 py-1 ${
@@ -34,6 +35,7 @@ export default function Header() {
           >
             Open Tool
           </a>
+          <LoginMenu />
         </nav>
       </div>
     </header>
