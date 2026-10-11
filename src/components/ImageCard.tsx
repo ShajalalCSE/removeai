@@ -7,7 +7,7 @@ import DownloadButton from './DownloadButton';
 import ProcessingStatus from './ProcessingStatus';
 import { getImageWorkerClient } from '../lib/worker-client';
 import { buildOutputFilename, cleanModeSuffix } from '../lib/image-export';
-import { PIXEL_7_PRESET } from '../lib/presets';
+import { PIXEL_7_PRESET, nowAsExifDateTime } from '../lib/presets';
 
 interface ImageCardProps {
   image: UploadedImage;
@@ -57,7 +57,8 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
     }
   };
 
-  const runPixelPreset = () => runExifWrite(PIXEL_7_PRESET.fields, 'pixel-preset');
+  const runPixelPreset = () =>
+    runExifWrite({ ...PIXEL_7_PRESET.fields, dateTimeOriginal: nowAsExifDateTime() }, 'pixel-preset');
 
   const downloadableBlob = cleanResult?.blob ?? exifResult?.blob ?? null;
   const downloadFilename = cleanResult
@@ -95,55 +96,75 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
         </p>
       )}
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
         <button
           type="button"
           disabled={busy}
           onClick={() => runClean('ai')}
-          title="Removes XMP, C2PA/Content Credentials, IPTC and the EXIF Software tag - keeps your camera EXIF (make, model, exposure, GPS)."
-          className="focus-ring inline-flex items-center gap-1.5 rounded-lg bg-ink-900 px-3.5 py-2 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0 dark:bg-accent-600"
+          className="focus-ring relative flex flex-col items-start gap-0.5 rounded-lg bg-ink-900 p-3 text-left shadow-soft transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0 dark:bg-accent-600"
         >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 3v3m0 12v3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1M3 12h3m12 0h3M5.6 18.4l2.1-2.1m8.6-8.6 2.1-2.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-            <circle cx="12" cy="12" r="3" fill="currentColor" />
-          </svg>
-          Remove AI Metadata
+          <span className="absolute -top-2 right-2 rounded-full bg-accent-500 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+            Recommended
+          </span>
+          <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-white">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="flex-shrink-0">
+              <path d="M12 3v3m0 12v3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1M3 12h3m12 0h3M5.6 18.4l2.1-2.1m8.6-8.6 2.1-2.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              <circle cx="12" cy="12" r="3" fill="currentColor" />
+            </svg>
+            Remove AI Metadata
+          </span>
+          <span className="text-xs text-white/70">Strips AI tags, keeps your camera info</span>
         </button>
+
         <button
           type="button"
           disabled={busy}
           onClick={() => runClean('all')}
-          title="Removes every metadata segment/chunk this format supports, including all EXIF."
-          className="focus-ring inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3.5 py-2 text-sm font-semibold text-red-700 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300"
+          className="focus-ring flex flex-col items-start gap-0.5 rounded-lg border border-red-200 bg-red-50 p-3 text-left transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0 dark:border-red-900/50 dark:bg-red-950/30"
         >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M4 7h16M9 7V4.5A1.5 1.5 0 0 1 10.5 3h3A1.5 1.5 0 0 1 15 4.5V7m2 0 -.7 12.3A2 2 0 0 1 14.3 21H9.7a2 2 0 0 1-2-1.7L7 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          Remove All Metadata
+          <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-red-700 dark:text-red-300">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="flex-shrink-0">
+              <path d="M4 7h16M9 7V4.5A1.5 1.5 0 0 1 10.5 3h3A1.5 1.5 0 0 1 15 4.5V7m2 0 -.7 12.3A2 2 0 0 1 14.3 21H9.7a2 2 0 0 1-2-1.7L7 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            Remove All Metadata
+          </span>
+          <span className="text-xs text-red-700/70 dark:text-red-300/70">Strips everything, including camera info</span>
         </button>
+
         <button
           type="button"
           disabled={busy}
           onClick={runPixelPreset}
-          title="One click: writes simulated Google Pixel 7 camera EXIF (make, model, lens, exposure) to this image - no manual entry."
-          className="focus-ring inline-flex items-center gap-1.5 rounded-lg border border-accent-300 bg-accent-50 px-3.5 py-2 text-sm font-semibold text-accent-800 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0 dark:border-accent-700 dark:bg-accent-950/30 dark:text-accent-200"
+          className="focus-ring flex flex-col items-start gap-0.5 rounded-lg border border-accent-300 bg-accent-50 p-3 text-left transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0 dark:border-accent-700 dark:bg-accent-950/30"
         >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h2l1-1.5h7l1 1.5h2A1.5 1.5 0 0 1 20 8.5v9A1.5 1.5 0 0 1 18.5 19h-13A1.5 1.5 0 0 1 4 17.5v-9Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-            <circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="1.6" />
-          </svg>
-          Camera Data Adding
+          <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-800 dark:text-accent-200">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="flex-shrink-0">
+              <path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h2l1-1.5h7l1 1.5h2A1.5 1.5 0 0 1 20 8.5v9A1.5 1.5 0 0 1 18.5 19h-13A1.5 1.5 0 0 1 4 17.5v-9Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+              <circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="1.6" />
+            </svg>
+            Camera Data Adding
+          </span>
+          <span className="text-xs text-accent-800/70 dark:text-accent-200/70">1-click Pixel 7 info, no typing</span>
         </button>
+
         <button
           type="button"
           disabled={busy}
           onClick={() => setTab(tab === 'exif' ? 'clean' : 'exif')}
-          className="focus-ring rounded-lg border border-ink-200 bg-white px-3.5 py-2 text-sm font-semibold text-ink-700 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-200"
+          className="focus-ring flex flex-col items-start gap-0.5 rounded-lg border border-ink-200 bg-white p-3 text-left transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 dark:border-ink-700 dark:bg-ink-900"
         >
-          {tab === 'exif' ? 'Hide Camera EXIF Editor' : 'Camera EXIF Editor (manual)'}
+          <span className="text-sm font-semibold text-ink-700 dark:text-ink-200">
+            {tab === 'exif' ? 'Hide Manual Editor' : 'Manual EXIF Editor'}
+          </span>
+          <span className="text-xs text-ink-500 dark:text-ink-400">Type your own camera details</span>
         </button>
-        {downloadableBlob && <DownloadButton blob={downloadableBlob} filename={downloadFilename} />}
       </div>
+
+      {downloadableBlob && (
+        <div className="mt-3">
+          <DownloadButton blob={downloadableBlob} filename={downloadFilename} />
+        </div>
+      )}
 
       {busy && (
         <div className="mt-3">

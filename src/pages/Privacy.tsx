@@ -49,6 +49,26 @@ export default function Privacy() {
             browser storage (localStorage, IndexedDB, or similar) in any form.
           </p>
         </section>
+
+        <section>
+          <h2 className="text-lg font-bold text-ink-900 dark:text-white">Advertising</h2>
+          <p className="mt-2">
+            ClearFrame does not currently show ads. If we enable Google AdSense in the future to help cover
+            hosting costs, this section will be updated first. When active, AdSense and its partners may use
+            cookies or similar identifiers in your browser to serve and measure ads - this applies only to the ad
+            slots themselves and has no access to your images, which are never transmitted anywhere. You would be
+            able to control ad personalization at{' '}
+            <a
+              href="https://adssettings.google.com"
+              target="_blank"
+              rel="noreferrer"
+              className="text-accent-600 underline hover:text-accent-700 dark:text-accent-400"
+            >
+              adssettings.google.com
+            </a>
+            .
+          </p>
+        </section>
       </div>
     </div>
   );

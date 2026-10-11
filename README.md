@@ -72,3 +72,17 @@ PNG and WebP don't have a format-level split between "camera EXIF" and
 "AI-generation metadata" the way JPEG's EXIF/XMP segments do, so for those
 two formats "Remove AI Metadata" and "Remove All Metadata" strip the same
 set of chunks. See the FAQ page in the app for the full explanation.
+
+## Enabling Google AdSense
+
+The site isn't showing ads yet (no approved publisher ID), but the groundwork
+is in place: `public/_headers`'s CSP already allows the AdSense/doubleclick
+domains, and the Privacy page already discloses future ad use. Once your
+AdSense application is approved:
+
+1. **`index.html`**: uncomment the `adsbygoogle.js` `<script>` tag near the top of `<head>` and replace `ca-pub-XXXXXXXXXXXXXXXX` with your real publisher ID.
+2. **`public/ads.txt`**: uncomment the `google.com, pub-...` line and replace the placeholder ID with your real one.
+3. **Ad units**: add `<ins class="adsbygoogle">` tags wherever you want ads to render (see [Google's ad unit docs](https://support.google.com/adsense/answer/9274025)), each followed by `<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>`.
+4. Rebuild (`npm run build`) and redeploy.
+
+If a particular ad format needs a CSP exception beyond what's already allowed, AdSense's own error console will say so - add the specific domain to `public/_headers` rather than loosening the policy broadly.

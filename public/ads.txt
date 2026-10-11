@@ -1,0 +1,6 @@
+# This site is not yet serving Google AdSense ads.
+# Once approved, replace pub-0000000000000000 below with your real AdSense
+# publisher ID (find it at https://www.google.com/adsense -> Account ->
+# Account information) and remove the leading "#" from that line.
+#
+# google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0

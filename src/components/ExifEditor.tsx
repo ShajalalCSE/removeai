@@ -1,13 +1,13 @@
 import { useId, useState } from 'react';
 import type { CameraExifFields } from '../types/metadata';
-import { CAMERA_PRESETS } from '../lib/presets';
+import { CAMERA_PRESETS, nowAsExifDateTime } from '../lib/presets';
 
 interface ExifEditorProps {
   onApply: (fields: CameraExifFields) => void;
   busy?: boolean;
 }
 
-const emptyFields: CameraExifFields = {};
+const defaultFields = (): CameraExifFields => ({ dateTimeOriginal: nowAsExifDateTime() });
 
 function TextField({
   label,
@@ -40,7 +40,7 @@ function TextField({
 }
 
 export default function ExifEditor({ onApply, busy }: ExifEditorProps) {
-  const [fields, setFields] = useState<CameraExifFields>(emptyFields);
+  const [fields, setFields] = useState<CameraExifFields>(defaultFields);
   const formId = useId();
 
   const set = <K extends keyof CameraExifFields>(key: K, value: CameraExifFields[K]) =>
@@ -48,7 +48,12 @@ export default function ExifEditor({ onApply, busy }: ExifEditorProps) {
 
   const applyPreset = (presetId: string) => {
     const preset = CAMERA_PRESETS.find((p) => p.id === presetId);
-    if (preset) setFields(preset.fields);
+    if (preset) {
+      setFields((prev) => ({
+        ...preset.fields,
+        dateTimeOriginal: prev.dateTimeOriginal || nowAsExifDateTime(),
+      }));
+    }
   };
 
   const hasAnyValue = Object.values(fields).some((v) => v && String(v).trim());
@@ -178,7 +183,7 @@ export default function ExifEditor({ onApply, busy }: ExifEditorProps) {
         </button>
         <button
           type="button"
-          onClick={() => setFields(emptyFields)}
+          onClick={() => setFields(defaultFields())}
           className="focus-ring rounded-lg px-3 py-2 text-sm font-medium text-ink-500 hover:text-ink-800 dark:text-ink-400 dark:hover:text-white"
         >
           Clear

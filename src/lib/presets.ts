@@ -6,6 +6,13 @@ export interface CameraPreset {
   fields: CameraExifFields;
 }
 
+/** "YYYY-MM-DD HH:mm:ss" in the local timezone, for defaulting the Date and Time field to the moment of upload/editing. */
+export function nowAsExifDateTime(): string {
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
 // These are illustrative, simulated profiles for testing and creative workflows -
 // not captures of any real device's actual output. Applying one does not make
 // the image "really" shot on that camera; it only writes these EXIF values.

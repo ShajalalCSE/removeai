@@ -40,8 +40,21 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-10 border-t border-ink-100 pt-6 text-xs text-ink-400 dark:border-ink-800 dark:text-ink-500">
-          © {new Date().getFullYear()} ClearFrame. All processing happens locally in your browser.
+        <div className="mt-10 flex flex-col gap-4 border-t border-ink-100 pt-6 dark:border-ink-800 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs text-ink-400 dark:text-ink-500">
+            © {new Date().getFullYear()} ClearFrame. All processing happens locally in your browser.
+          </p>
+          <a
+            href="https://missionhacker.com"
+            target="_blank"
+            rel="noreferrer"
+            className="focus-ring inline-flex items-center gap-2 rounded-lg text-xs text-ink-500 transition-colors hover:text-ink-800 dark:text-ink-400 dark:hover:text-white"
+          >
+            <img src="/mission-hackers-logo.png" alt="" aria-hidden="true" className="h-7 w-7 rounded-full" />
+            <span>
+              A project by <span className="font-semibold text-ink-700 dark:text-ink-200">Mission Hackers Bangladesh</span>
+            </span>
+          </a>
         </div>
       </div>
     </footer>
