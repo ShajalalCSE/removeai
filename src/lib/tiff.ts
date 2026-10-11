@@ -246,3 +246,34 @@ export function readEntryNumber(tiff: ParsedTiff, entry: ParsedTiffEntry): numbe
 export const TAG_SOFTWARE = 0x0131;
 export const TAG_MAKE = 0x010f;
 export const TAG_MODEL = 0x0110;
+export const TAG_GPS_IFD_POINTER = 0x8825;
+
+/**
+ * Returns a copy of `tiffBytes` with the given IFD0 tag neutralized (its tag id
+ * rewritten to 0xFFFE "unassigned", which readers skip), or null if the tag
+ * wasn't present. Used to drop a single tag - e.g. the GPS IFD pointer - without
+ * re-laying out the whole IFD; same technique the Software-tag stripper in
+ * jpeg.ts uses. For the GPS pointer specifically, neutralizing it is sufficient:
+ * with no valid pointer to it, the GPS sub-IFD becomes unreachable to any EXIF
+ * reader even though its bytes remain physically present in the file.
+ */
+export function neutralizeIfd0Tag(tiffBytes: Uint8Array, tagId: number): Uint8Array | null {
+  const parsed = parseTiff(tiffBytes);
+  if (!parsed) return null;
+  const hasTag = parsed.ifd0.some((e) => e.tag === tagId);
+  if (!hasTag) return null;
+
+  const patched = new Uint8Array(tiffBytes);
+  const view = new DataView(patched.buffer, patched.byteOffset, patched.byteLength);
+  const littleEndian = parsed.littleEndian;
+  const ifd0Offset = view.getUint32(4, littleEndian);
+  const count = view.getUint16(ifd0Offset, littleEndian);
+  for (let i = 0; i < count; i++) {
+    const entryOffset = ifd0Offset + 2 + i * 12;
+    const tag = view.getUint16(entryOffset, littleEndian);
+    if (tag === tagId) {
+      view.setUint16(entryOffset, 0xfffe, littleEndian);
+    }
+  }
+  return patched;
+}

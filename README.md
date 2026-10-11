@@ -14,6 +14,21 @@ entirely in the browser. No server, no uploads, no backend.
 
 See the in-app FAQ for the exact behavioral differences between "Remove AI Metadata" and "Remove All Metadata" per format.
 
+## Tools platform
+
+Below the original tool, the homepage also hosts a broader "Image Privacy &
+Cyber Forensics Tools" catalog (`src/lib/tools-catalog.ts`, `/tools`) with its
+own dark theme (`tailwind.config.js`'s `cyber`/`neon`/`wire` palette). Six
+entries are real, working tools sharing the same binary engine as the
+original tool: EXIF Viewer, GPS Location Checker, GPS Metadata Remover
+(a new targeted strip of just the GPS IFD, added to `jpeg.ts`/`png.ts`/
+`webp.ts` via `tiff.ts`'s `neutralizeIfd0Tag`), Image Privacy Checker,
+Metadata Comparison, and EXIF Metadata Remover. Every other card in the
+catalog is marked `status: 'coming-soon'` and renders as a non-clickable
+card - no card links anywhere that doesn't have a real implementation behind
+it. New tool pages live under `src/pages/tools/` and share layout via
+`src/components/platform/ToolPageShell.tsx`.
+
 ## Local development
 
 ```bash

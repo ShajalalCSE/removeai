@@ -29,12 +29,14 @@ const FAQS: [string, string][] = [
   ],
 ];
 
-import { useEffect } from 'react';
+import { useDocumentMeta } from '../lib/use-document-meta';
 
 export default function Faq() {
-  useEffect(() => {
-    document.title = 'FAQ — Mission Hackers Bangladesh';
-  }, []);
+  useDocumentMeta(
+    'FAQ — Mission Hackers Bangladesh',
+    'AI মেটাডেটা রিমুভাল, EXIF, C2PA ও ইমেজ প্রাইভেসি নিয়ে সবচেয়ে বেশি জিজ্ঞাসিত প্রশ্নের উত্তর।',
+    '/faq',
+  );
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">

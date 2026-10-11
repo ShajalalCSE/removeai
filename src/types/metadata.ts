@@ -15,6 +15,7 @@ export interface MetadataReport {
   hasIcc: boolean;
   hasC2pa: boolean;
   software: string | null;
+  gps: { lat: number; lon: number } | null;
   aiSignals: string[]; // human-readable flags, e.g. "Software tag mentions 'Midjourney'"
   totalMetadataBytes: number;
 }
@@ -53,6 +54,15 @@ export interface ExifWriteResult {
   format: ImageFormat;
   written: string[];
   skipped: { field: string; reason: string }[];
+  verification: MetadataReport;
+}
+
+export interface GpsRemovalResult {
+  blob: Blob;
+  format: ImageFormat;
+  hadGps: boolean;
+  bytesBefore: number;
+  bytesAfter: number;
   verification: MetadataReport;
 }
 

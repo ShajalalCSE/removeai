@@ -1,9 +1,30 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
+import { Upload, ScanLine, ClipboardCheck, Download as DownloadIcon, Lock, ShieldOff, FileWarning } from 'lucide-react';
 import ImageUploader from '../components/ImageUploader';
 import ImageCard from '../components/ImageCard';
+import ToolsGrid from '../components/platform/ToolsGrid';
 import { getImageWorkerClient } from '../lib/worker-client';
 import { downloadBlob } from '../lib/image-export';
+import { useDocumentMeta } from '../lib/use-document-meta';
 import type { UploadedImage } from '../types/metadata';
+
+const HOW_IT_WORKS = [
+  { icon: Upload, title: 'Upload', body: 'সাপোর্টেড একটি ফাইল আপলোড বা সিলেক্ট করুন।' },
+  { icon: ScanLine, title: 'Inspect', body: 'এর মেটাডেটা পরীক্ষা করুন, বা একটি ক্লিনিং অপারেশন বেছে নিন।' },
+  { icon: ClipboardCheck, title: 'Review', body: 'প্রকৃত প্রসেসিং ফলাফল পর্যালোচনা করুন।' },
+  { icon: DownloadIcon, title: 'Download', body: 'প্রসেস করা ফাইল বা মেটাডেটা রিপোর্ট ডাউনলোড করুন।' },
+];
+
+const HOME_FAQ: [string, string][] = [
+  ['ইমেজ মেটাডেটা কী?', 'মেটাডেটা হলো একটি ছবির ফাইলের ভেতরে সংরক্ষিত অতিরিক্ত তথ্য যা ছবির ভিজুয়াল অংশে দেখা যায় না - যেমন ক্যামেরার মডেল, তোলার তারিখ, GPS লোকেশন, বা ব্যবহৃত সফটওয়্যার/জেনারেটরের নাম।'],
+  ['একটি ছবি কি GPS লোকেশন প্রকাশ করতে পারে?', 'হ্যাঁ। অনেক স্মার্টফোন ছবি তোলার সময় লোকেশন সার্ভিস চালু থাকলে EXIF ডেটায় GPS কোঅর্ডিনেট যোগ করে। GPS লোকেশন চেকার দিয়ে আপনি তা যাচাই করতে পারেন।'],
+  ['EXIF ডেটা কী?', 'EXIF (Exchangeable Image File Format) হলো JPEG, TIFF ও কিছু PNG/WebP ফাইলে ব্যবহৃত একটি স্ট্যান্ডার্ড মেটাডেটা ফরম্যাট, যাতে ক্যামেরা সেটিংস, তারিখ, ও কখনো কখনো GPS তথ্য থাকে।'],
+  ['C2PA কন্টেন্ট ক্রেডেনশিয়ালস কী?', 'C2PA হলো একটি ইন্ডাস্ট্রি স্ট্যান্ডার্ড যা একটি ছবির তৈরি ও এডিটিং হিস্ট্রি (প্রোভেন্যান্স) ডিজিটালি সই করে রেকর্ড করে। সব AI-জেনারেটেড ছবিতে C2PA ডেটা থাকে না, আবার C2PA ডেটা না থাকলেই ছবিটি AI-জেনারেটেড নয় তাও প্রমাণ হয় না।'],
+  ['মেটাডেটা রিমুভ করলে কি ছবির মান পরিবর্তন হয়?', 'আমাদের টুলে না - মেটাডেটা সরাসরি ফাইল স্ট্রাকচার থেকে রিমুভ করা হয়, পিক্সেল ডেটা কখনো রি-এনকোড করা হয় না, তাই কোনো কোয়ালিটি লস হয় না।'],
+  ['মেটাডেটা রিমুভ করলে কি ছবিটি আর AI-জেনারেটেড হিসেবে শনাক্ত করা অসম্ভব হয়ে যায়?', 'না। মেটাডেটা রিমুভ করলে মেটাডেটা-ভিত্তিক সনাক্তকরণ কঠিন হয়, কিন্তু পিক্সেল-ভিত্তিক AI-ডিটেকশন মডেল বা ইনভিজিবল পিক্সেল ওয়াটারমার্ক - যা মেটাডেটার অংশ নয় - তাতে এর কোনো প্রভাব পড়ে না। আমরা কখনো এমন দাবি করি না যে এটি একটি ছবিকে "আনডিটেক্টেবল" করে দেয়।'],
+  ['আপলোড করা ফাইল কি সংরক্ষণ করা হয়?', 'না। প্রসেসিং আপনার ব্রাউজারেই হয় এবং ফাইল কখনো কোনো সার্ভারে পাঠানো হয় না, তাই সংরক্ষণেরও প্রশ্ন নেই।'],
+  ['কোন কোন ফাইল ফরম্যাট সাপোর্টেড?', 'এই মুহূর্তে ইমেজ টুলগুলো JPEG, PNG ও WebP সাপোর্ট করে। অন্য ক্যাটাগরির (ডকুমেন্ট, ভিডিও, অডিও) টুল এখনো "COMING SOON" হিসেবে চিহ্নিত এবং বর্তমানে কাজ করে না।'],
+];
 
 let idCounter = 0;
 function nextId() {
@@ -17,9 +38,11 @@ export default function Home() {
   const [resultCount, setResultCount] = useState(0);
   const resultsRef = useRef(new Map<string, { blob: Blob; filename: string }>());
 
-  useEffect(() => {
-    document.title = 'Mission Hackers Bangladesh — AI মেটাডেটা রিমুভাল টুল';
-  }, []);
+  useDocumentMeta(
+    'Mission Hackers Bangladesh — AI মেটাডেটা রিমুভাল টুল',
+    'আপনার JPEG, PNG ও WebP ছবি থেকে AI জেনারেটরের ট্যাগ, EXIF, IPTC ও XMP মেটাডেটা সম্পূর্ণ আপনার ব্রাউজারের ভেতরেই রিমুভ করুন। GPS চেকার, প্রাইভেসি স্ক্যানার ও আরও ফরেনসিক্স টুল সহ।',
+    '/',
+  );
 
   const addFiles = useCallback(async (files: File[]) => {
     setLoadErrors([]);
@@ -135,19 +158,97 @@ export default function Home() {
         </section>
       )}
 
-      <section className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-        <h2 className="text-lg font-bold text-ink-900 dark:text-white">আপনার প্রাইভেসি, গঠনগতভাবেই নিশ্চিত</h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-3">
-          {[
-            ['কোনো আপলোড নেই', 'রিড, ক্লিন ও এডিট - প্রতিটি অপারেশন আপনার ব্রাউজারে বা একটি Web Worker-এ raw বাইটের উপর চলে - ফাইল কখনো নেটওয়ার্ক রিকোয়েস্টের মধ্য দিয়ে যায় না।'],
-            ['কোনো রি-কম্প্রেশন নেই', 'ক্যানভাসের মাধ্যমে পিক্সেল রি-এনকোড না করে সরাসরি ফাইল স্ট্রাকচার পরিবর্তন করে মেটাডেটা রিমুভ করা হয়, তাই ছবির কোয়ালিটি অক্ষুণ্ণ থাকে।'],
-            ['কিছুই সংরক্ষিত হয় না', 'ট্যাব বন্ধ বা রিফ্রেশ করলে কিছুই থাকে না। আপনার ছবি জমা রাখার জন্য কোনো সার্ভার, ডেটাবেস বা অ্যানালিটিক্স পাইপলাইন নেই।'],
-          ].map(([title, body]) => (
-            <div key={title} className="rounded-xl border border-ink-100 bg-white p-4 dark:border-ink-800 dark:bg-ink-900">
-              <h3 className="text-sm font-semibold text-ink-900 dark:text-white">{title}</h3>
-              <p className="mt-1.5 text-sm text-ink-500 dark:text-ink-400">{body}</p>
+      {/* ============================================================
+          Everything below this line is new "tools platform" content,
+          added below the original (preserved, light-themed) Remove AI
+          Metadata tool above. It uses a separate dark "cyber forensics"
+          theme on purpose, per the platform-expansion brief.
+          ============================================================ */}
+
+      <section id="tools-grid" className="bg-cyber-950 py-16 text-cyber-100">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-neon-500/40 bg-neon-500/10 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wide text-neon-400">
+            Image Privacy &amp; Cyber Forensics Tools
+          </span>
+          <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">Explore More Free Tools</h2>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-cyber-200">
+            ছবির লুকানো তথ্য ইনভেস্টিগেট করুন, আপনার প্রাইভেসি সুরক্ষিত করুন, এবং ডিজিটাল ফাইলের ফুটপ্রিন্ট পরীক্ষা করুন -
+            সম্পূর্ণ ফ্রি অনলাইন টুল দিয়ে।
+          </p>
+          <div className="mt-8">
+            <ToolsGrid />
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-cyber-900 py-16 text-cyber-100">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <h2 className="text-2xl font-extrabold tracking-tight text-white">How It Works</h2>
+          <div className="mt-8 grid gap-4 sm:grid-cols-4">
+            {HOW_IT_WORKS.map((step, i) => (
+              <div key={step.title} className="relative rounded-lg border border-cyber-600 bg-cyber-950/60 p-5">
+                <span className="font-mono text-xs font-bold text-neon-500">0{i + 1}</span>
+                <div className="mt-3 flex h-10 w-10 items-center justify-center rounded-md border border-neon-500/30 bg-neon-500/10 text-neon-400">
+                  <step.icon size={20} aria-hidden="true" />
+                </div>
+                <h3 className="mt-3 font-mono text-sm font-bold uppercase tracking-wide text-white">{step.title}</h3>
+                <p className="mt-1.5 text-sm text-cyber-200">{step.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-cyber-950 py-16 text-cyber-100">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <h2 className="text-2xl font-extrabold tracking-tight text-white">Privacy First</h2>
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            <div className="rounded-lg border border-cyber-700 bg-cyber-900/50 p-5">
+              <Lock size={20} className="text-neon-400" aria-hidden="true" />
+              <h3 className="mt-3 font-mono text-sm font-bold uppercase tracking-wide text-white">ব্রাউজার-ভিত্তিক প্রসেসিং</h3>
+              <p className="mt-1.5 text-sm text-cyber-200">
+                যেখানে টেকনিক্যালি সম্ভব, প্রতিটি টুল আপনার ব্রাউজারে ফাইল প্রসেস করে - এই সাইটের কোনো টুলেই এই মুহূর্তে
+                ফাইল সার্ভারে আপলোড করার দরকার হয় না।
+              </p>
             </div>
-          ))}
+            <div className="rounded-lg border border-cyber-700 bg-cyber-900/50 p-5">
+              <ShieldOff size={20} className="text-neon-400" aria-hidden="true" />
+              <h3 className="mt-3 font-mono text-sm font-bold uppercase tracking-wide text-white">ফাইল সংরক্ষণ হয় না</h3>
+              <p className="mt-1.5 text-sm text-cyber-200">
+                কোনো ডেটাবেস বা সার্ভার-সাইড স্টোরেজ নেই। ট্যাব বন্ধ করলে বা রিফ্রেশ করলে আপলোড করা ফাইল আপনার ব্রাউজারের
+                মেমোরি থেকে মুছে যায়।
+              </p>
+            </div>
+            <div className="rounded-lg border border-cyber-700 bg-cyber-900/50 p-5">
+              <FileWarning size={20} className="text-amber-400" aria-hidden="true" />
+              <h3 className="mt-3 font-mono text-sm font-bold uppercase tracking-wide text-white">এটি নির্ভর করে আপনার ব্রাউজারের উপর</h3>
+              <p className="mt-1.5 text-sm text-cyber-200">
+                "লোকাল প্রসেসিং" আমাদের কোডের একটি বক্তব্য, আপনার পরিবেশ থেকে স্বাধীন কোনো গ্যারান্টি নয় - এটি নির্ভর করে
+                আপনার ব্রাউজার সঠিকভাবে কাজ করছে এবং কোনো এক্সটেনশন হস্তক্ষেপ করছে না তার উপর। বিস্তারিত জানতে{' '}
+                <a href="/privacy" className="text-neon-400 underline hover:text-neon-300">
+                  প্রাইভেসি পলিসি
+                </a>{' '}
+                দেখুন।
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-cyber-900 py-16 text-cyber-100">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <h2 className="text-2xl font-extrabold tracking-tight text-white">Frequently Asked Questions</h2>
+          <div className="mt-6 divide-y divide-cyber-700">
+            {HOME_FAQ.map(([q, a], i) => (
+              <details key={i} className="group py-4">
+                <summary className="focus-ring-neon flex cursor-pointer list-none items-center justify-between gap-4 rounded text-left text-sm font-semibold text-white">
+                  {q}
+                  <span className="flex-shrink-0 font-mono text-neon-500 transition-transform group-open:rotate-45">+</span>
+                </summary>
+                <p className="mt-2.5 text-sm leading-relaxed text-cyber-200">{a}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
     </div>

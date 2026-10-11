@@ -7,6 +7,7 @@
 // so pixel data and transparency are always bit-identical to the source.
 
 import { bufToUint8, bytesToAscii, concatBytes, crc32, u32be, writeU32be } from './binary';
+import { neutralizeIfd0Tag, TAG_GPS_IFD_POINTER } from './tiff';
 
 const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
 
@@ -145,4 +146,31 @@ export function writePngExif(bytes: Uint8Array, tiff: Uint8Array): Uint8Array {
   }
 
   return concatBytes(out);
+}
+
+export interface GpsStripResult {
+  bytes: Uint8Array;
+  hadGps: boolean;
+}
+
+/** Removes only the GPS IFD pointer from the eXIf chunk (if present), keeping every other chunk untouched. */
+export function stripPngGps(bytes: Uint8Array): GpsStripResult {
+  const chunks = parsePngChunks(bytes);
+  const out: Uint8Array[] = [bytes.slice(0, 8)];
+  let hadGps = false;
+
+  for (const chunk of chunks) {
+    if (chunk.type === 'eXIf') {
+      const tiffBytes = bytes.slice(chunk.dataStart, chunk.dataStart + chunk.length);
+      const patched = neutralizeIfd0Tag(tiffBytes, TAG_GPS_IFD_POINTER);
+      if (patched) {
+        hadGps = true;
+        out.push(buildChunk('eXIf', patched));
+        continue;
+      }
+    }
+    out.push(bytes.slice(chunk.offset, chunk.offset + chunk.totalLength));
+  }
+
+  return { bytes: concatBytes(out), hadGps };
 }

@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import { useDocumentMeta } from '../lib/use-document-meta';
 
 export default function Privacy() {
-  useEffect(() => {
-    document.title = 'প্রাইভেসি — Mission Hackers Bangladesh';
-  }, []);
+  useDocumentMeta(
+    'প্রাইভেসি — Mission Hackers Bangladesh',
+    'Mission Hackers Bangladesh-এর টুলগুলো কীভাবে আপনার ফাইল হ্যান্ডল করে তার বিস্তারিত - লোকাল প্রসেসিং, কোনো আপলোড নেই, কোনো সংরক্ষণ নেই।',
+    '/privacy',
+  );
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">

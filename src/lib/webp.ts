@@ -7,6 +7,7 @@
 // the VP8/VP8L/ALPH/ANIM image-data chunks are always copied through untouched.
 
 import { bufToUint8, bytesToAscii, concatBytes, u32le, writeU32le } from './binary';
+import { neutralizeIfd0Tag, TAG_GPS_IFD_POINTER } from './tiff';
 
 export interface WebpChunk {
   tag: string;
@@ -181,4 +182,31 @@ export function writeWebpExif(bytes: Uint8Array, tiff: Uint8Array, dimensions: W
   }
 
   return buildRiffContainer(outChunks);
+}
+
+export interface GpsStripResult {
+  bytes: Uint8Array;
+  hadGps: boolean;
+}
+
+/** Removes only the GPS IFD pointer from the EXIF chunk (if present), keeping every other chunk untouched. */
+export function stripWebpGps(bytes: Uint8Array): GpsStripResult {
+  const chunks = parseWebpChunks(bytes);
+  const outChunks: Uint8Array[] = [];
+  let hadGps = false;
+
+  for (const chunk of chunks) {
+    if (chunk.tag === 'EXIF') {
+      const tiffBytes = bytes.slice(chunk.dataStart, chunk.dataStart + chunk.dataLength);
+      const patched = neutralizeIfd0Tag(tiffBytes, TAG_GPS_IFD_POINTER);
+      if (patched) {
+        hadGps = true;
+        outChunks.push(buildChunk('EXIF', patched));
+        continue;
+      }
+    }
+    outChunks.push(bytes.slice(chunk.offset, chunk.offset + chunk.totalLength));
+  }
+
+  return { bytes: buildRiffContainer(outChunks), hadGps };
 }

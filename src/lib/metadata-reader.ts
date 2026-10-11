@@ -158,8 +158,9 @@ export async function readMetadata(file: Blob, format: ImageFormat): Promise<Met
   pushField('EXIF', 'ফ্ল্যাশ', parsed.Flash);
   pushField('EXIF', 'হোয়াইট ব্যালেন্স', parsed.WhiteBalance);
   pushField('EXIF', 'ওরিয়েন্টেশন', parsed.Orientation);
-  if (parsed.latitude && parsed.longitude) {
-    pushField('EXIF', 'GPS লোকেশন', `${parsed.latitude.toFixed(5)}, ${parsed.longitude.toFixed(5)}`);
+  const gps = typeof parsed.latitude === 'number' && typeof parsed.longitude === 'number' ? { lat: parsed.latitude, lon: parsed.longitude } : null;
+  if (gps) {
+    pushField('EXIF', 'GPS লোকেশন', `${gps.lat.toFixed(5)}, ${gps.lon.toFixed(5)}`);
   }
   pushField('ICC', 'কালার প্রোফাইল', parsed.ProfileDescription ?? parsed.ColorSpaceData);
   pushField('IPTC', 'ক্যাপশন', parsed.caption ?? parsed.Caption);
@@ -191,6 +192,7 @@ export async function readMetadata(file: Blob, format: ImageFormat): Promise<Met
     hasIcc,
     hasC2pa: extra.hasC2pa,
     software,
+    gps,
     aiSignals: Array.from(new Set(aiSignals)),
     totalMetadataBytes: extra.totalMetadataBytes,
   };

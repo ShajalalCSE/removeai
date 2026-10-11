@@ -2,13 +2,13 @@
 // stripper for the detected format, re-reads the result to verify, and
 // returns a report the UI can render directly.
 
-import type { CleanMode, CleanResult, ImageFormat } from '../types/metadata';
+import type { CleanMode, CleanResult, GpsRemovalResult, ImageFormat } from '../types/metadata';
 import { bufToUint8, toBlob } from './binary';
 import { MIME_BY_FORMAT, sniffFormat } from './format';
-import { stripJpegMetadata } from './jpeg';
+import { stripJpegGps, stripJpegMetadata } from './jpeg';
 import { readMetadata } from './metadata-reader';
-import { stripPngMetadata } from './png';
-import { stripWebpMetadata } from './webp';
+import { stripPngGps, stripPngMetadata } from './png';
+import { stripWebpGps, stripWebpMetadata } from './webp';
 
 const KIND_LABELS: Record<string, string> = {
   exif: 'EXIF (ক্যামেরা তথ্য)',
@@ -82,6 +82,31 @@ export async function cleanImage(file: File, mode: CleanMode): Promise<CleanResu
     bytesBefore: bytes.length,
     bytesAfter: outBytes.length,
     recompressed: false,
+    verification,
+  };
+}
+
+/** Removes only the GPS IFD pointer from an image's EXIF data, leaving every other
+ * EXIF tag (make, model, exposure, etc.), XMP, IPTC and ICC data untouched. */
+export async function removeGpsOnly(file: File): Promise<GpsRemovalResult> {
+  const buf = await file.arrayBuffer();
+  const bytes = bufToUint8(buf);
+  const format = sniffFormat(bytes);
+  if (!format) {
+    throw new Error('ফরম্যাট সাপোর্টেড না বা শনাক্ত করা যায়নি। শুধু JPEG, PNG ও WebP সাপোর্টেড।');
+  }
+
+  const result = format === 'jpeg' ? stripJpegGps(bytes) : format === 'png' ? stripPngGps(bytes) : stripWebpGps(bytes);
+
+  const blob = toBlob(result.bytes, MIME_BY_FORMAT[format]);
+  const verification = await readMetadata(blob, format);
+
+  return {
+    blob,
+    format,
+    hadGps: result.hadGps,
+    bytesBefore: bytes.length,
+    bytesAfter: result.bytes.length,
     verification,
   };
 }

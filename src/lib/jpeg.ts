@@ -9,7 +9,7 @@
 // except for the metadata segments we remove.
 
 import { asciiToBytes, bytesToAscii, concatBytes, u16be, writeU16be } from './binary';
-import { parseTiff, TAG_SOFTWARE } from './tiff';
+import { neutralizeIfd0Tag, parseTiff, TAG_GPS_IFD_POINTER, TAG_SOFTWARE } from './tiff';
 
 export interface JpegSegment {
   marker: number; // e.g. 0xE1 for APP1
@@ -268,4 +268,51 @@ export function writeJpegExif(bytes: Uint8Array, tiff: Uint8Array): Uint8Array {
   out.push(bytes.slice(scanDataStart));
 
   return concatBytes(out);
+}
+
+export interface GpsStripResult {
+  bytes: Uint8Array;
+  hadGps: boolean;
+}
+
+/** Removes only the GPS IFD pointer from the EXIF segment (if present), keeping every
+ * other EXIF tag, XMP, ICC, etc. untouched. For a JPEG with no EXIF segment at all,
+ * returns the input unchanged with hadGps: false. */
+export function stripJpegGps(bytes: Uint8Array): GpsStripResult {
+  const { segments, scanDataStart } = parseJpegSegments(bytes);
+  const out: Uint8Array[] = [new Uint8Array([0xff, 0xd8])];
+  let hadGps = false;
+
+  for (const seg of segments) {
+    if (seg.marker === SOS) break;
+    if (isStandaloneMarker(seg.marker)) {
+      out.push(bytes.slice(seg.offset, seg.offset + seg.length));
+      continue;
+    }
+    const isMetadataMarker = seg.marker === COM || (seg.marker >= 0xe0 && seg.marker <= 0xef);
+    if (isMetadataMarker && classifySegment(bytes, seg) === 'exif') {
+      const sigEnd = seg.dataStart + 6; // "Exif\0\0"
+      const tiffBytes = bytes.slice(sigEnd, seg.dataStart + seg.dataLength);
+      const patchedTiff = neutralizeIfd0Tag(tiffBytes, TAG_GPS_IFD_POINTER);
+      if (patchedTiff) {
+        hadGps = true;
+        const newSegDataLength = 6 + patchedTiff.length;
+        const header = new Uint8Array(4);
+        header[0] = 0xff;
+        header[1] = seg.marker;
+        header.set(writeU16be(newSegDataLength + 2), 2);
+        out.push(concatBytes([header, asciiToBytes(APP1_EXIF_SIGNATURE), patchedTiff]));
+        continue;
+      }
+    }
+    out.push(bytes.slice(seg.offset, seg.offset + seg.length));
+  }
+
+  const sosSegment = segments.find((s) => s.marker === SOS);
+  if (sosSegment) {
+    out.push(bytes.slice(sosSegment.offset, sosSegment.dataStart + sosSegment.dataLength));
+  }
+  out.push(bytes.slice(scanDataStart));
+
+  return { bytes: concatBytes(out), hadGps };
 }
