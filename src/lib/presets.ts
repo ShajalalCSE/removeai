@@ -9,7 +9,26 @@ export interface CameraPreset {
 // These are illustrative, simulated profiles for testing and creative workflows -
 // not captures of any real device's actual output. Applying one does not make
 // the image "really" shot on that camera; it only writes these EXIF values.
+export const PIXEL_7_PRESET_ID = 'google-pixel-7';
+
 export const CAMERA_PRESETS: CameraPreset[] = [
+  {
+    id: PIXEL_7_PRESET_ID,
+    name: 'Google Pixel 7 (simulated)',
+    fields: {
+      make: 'Google',
+      model: 'Pixel 7',
+      lensModel: 'Pixel 7 back camera 6.81mm f/1.85',
+      exposureTime: '1/200',
+      fNumber: '1.85',
+      iso: '55',
+      focalLength: '6.81',
+      flash: 'not-fired',
+      whiteBalance: 'auto',
+      orientation: '1',
+      software: 'TQ3A.230901.001',
+    },
+  },
   {
     id: 'iphone-15-pro',
     name: 'iPhone 15 Pro (simulated)',
@@ -79,3 +98,5 @@ export const CAMERA_PRESETS: CameraPreset[] = [
     },
   },
 ];
+
+export const PIXEL_7_PRESET = CAMERA_PRESETS.find((p) => p.id === PIXEL_7_PRESET_ID)!;

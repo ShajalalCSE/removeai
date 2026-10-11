@@ -7,6 +7,7 @@ import DownloadButton from './DownloadButton';
 import ProcessingStatus from './ProcessingStatus';
 import { getImageWorkerClient } from '../lib/worker-client';
 import { buildOutputFilename, cleanModeSuffix } from '../lib/image-export';
+import { PIXEL_7_PRESET } from '../lib/presets';
 
 interface ImageCardProps {
   image: UploadedImage;
@@ -18,7 +19,7 @@ type Tab = 'clean' | 'exif';
 
 export default function ImageCard({ image, onRemove, onResultReady }: ImageCardProps) {
   const [tab, setTab] = useState<Tab>('clean');
-  const [processingMode, setProcessingMode] = useState<CleanMode | 'exif' | null>(null);
+  const [processingMode, setProcessingMode] = useState<CleanMode | 'exif' | 'pixel-preset' | null>(null);
   const [cleanResult, setCleanResult] = useState<CleanResult | null>(null);
   const [exifResult, setExifResult] = useState<ExifWriteResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -40,20 +41,23 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
     }
   };
 
-  const runExifWrite = async (fields: CameraExifFields) => {
+  const runExifWrite = async (fields: CameraExifFields, mode: 'exif' | 'pixel-preset' = 'exif') => {
     setError(null);
-    setProcessingMode('exif');
+    setProcessingMode(mode);
     try {
       const client = getImageWorkerClient();
       const result = await client.writeExif(image.file, fields);
       setExifResult(result);
       onResultReady?.(image.id, result.blob, buildOutputFilename(image.file.name, result.format, 'exif-edited'));
+      if (mode === 'pixel-preset') setTab('exif');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not write EXIF data to this image.');
     } finally {
       setProcessingMode(null);
     }
   };
+
+  const runPixelPreset = () => runExifWrite(PIXEL_7_PRESET.fields, 'pixel-preset');
 
   const downloadableBlob = cleanResult?.blob ?? exifResult?.blob ?? null;
   const downloadFilename = cleanResult
@@ -96,17 +100,39 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
           type="button"
           disabled={busy}
           onClick={() => runClean('ai')}
-          className="focus-ring rounded-lg bg-ink-900 px-3.5 py-2 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0 dark:bg-accent-600"
+          title="Removes XMP, C2PA/Content Credentials, IPTC and the EXIF Software tag - keeps your camera EXIF (make, model, exposure, GPS)."
+          className="focus-ring inline-flex items-center gap-1.5 rounded-lg bg-ink-900 px-3.5 py-2 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0 dark:bg-accent-600"
         >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 3v3m0 12v3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1M3 12h3m12 0h3M5.6 18.4l2.1-2.1m8.6-8.6 2.1-2.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            <circle cx="12" cy="12" r="3" fill="currentColor" />
+          </svg>
           Remove AI Metadata
         </button>
         <button
           type="button"
           disabled={busy}
           onClick={() => runClean('all')}
-          className="focus-ring rounded-lg border border-ink-200 bg-white px-3.5 py-2 text-sm font-semibold text-ink-700 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-200"
+          title="Removes every metadata segment/chunk this format supports, including all EXIF."
+          className="focus-ring inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3.5 py-2 text-sm font-semibold text-red-700 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300"
         >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 7h16M9 7V4.5A1.5 1.5 0 0 1 10.5 3h3A1.5 1.5 0 0 1 15 4.5V7m2 0 -.7 12.3A2 2 0 0 1 14.3 21H9.7a2 2 0 0 1-2-1.7L7 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
           Remove All Metadata
+        </button>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={runPixelPreset}
+          title="One click: writes simulated Google Pixel 7 camera EXIF (make, model, lens, exposure) to this image - no manual entry."
+          className="focus-ring inline-flex items-center gap-1.5 rounded-lg border border-accent-300 bg-accent-50 px-3.5 py-2 text-sm font-semibold text-accent-800 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0 dark:border-accent-700 dark:bg-accent-950/30 dark:text-accent-200"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h2l1-1.5h7l1 1.5h2A1.5 1.5 0 0 1 20 8.5v9A1.5 1.5 0 0 1 18.5 19h-13A1.5 1.5 0 0 1 4 17.5v-9Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+            <circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="1.6" />
+          </svg>
+          Camera Data Adding
         </button>
         <button
           type="button"
@@ -114,7 +140,7 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
           onClick={() => setTab(tab === 'exif' ? 'clean' : 'exif')}
           className="focus-ring rounded-lg border border-ink-200 bg-white px-3.5 py-2 text-sm font-semibold text-ink-700 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-200"
         >
-          {tab === 'exif' ? 'Hide Camera EXIF Editor' : 'Camera EXIF Editor'}
+          {tab === 'exif' ? 'Hide Camera EXIF Editor' : 'Camera EXIF Editor (manual)'}
         </button>
         {downloadableBlob && <DownloadButton blob={downloadableBlob} filename={downloadFilename} />}
       </div>
@@ -122,7 +148,13 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
       {busy && (
         <div className="mt-3">
           <ProcessingStatus
-            label={processingMode === 'exif' ? 'Writing EXIF data…' : 'Processing image…'}
+            label={
+              processingMode === 'exif'
+                ? 'Writing EXIF data…'
+                : processingMode === 'pixel-preset'
+                  ? 'Adding Pixel 7 camera data…'
+                  : 'Processing image…'
+            }
           />
         </div>
       )}
