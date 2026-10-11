@@ -8,13 +8,14 @@ export default function Privacy() {
   );
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
-      <h1 className="text-3xl font-extrabold tracking-tight text-ink-900 dark:text-white">প্রাইভেসি</h1>
-      <p className="mt-3 text-ink-500 dark:text-ink-400">সর্বশেষ আপডেট: মার্চ 2026</p>
+    <div className="bg-cyber-950 text-cyber-100">
+      <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
+        <h1 className="text-3xl font-extrabold tracking-tight text-white">প্রাইভেসি</h1>
+        <p className="mt-3 text-cyber-400">সর্বশেষ আপডেট: মার্চ 2026</p>
 
-      <div className="mt-8 space-y-8 text-ink-700 dark:text-ink-300">
+        <div className="mt-8 space-y-8 text-cyber-200">
         <section>
-          <h2 className="text-lg font-bold text-ink-900 dark:text-white">আপনার ছবি কখনো আপনার ডিভাইস থেকে বের হয় না</h2>
+          <h2 className="text-lg font-bold text-white">আপনার ছবি কখনো আপনার ডিভাইস থেকে বের হয় না</h2>
           <p className="mt-2">
             এই টুলের কোনো ব্যাকএন্ড, API বা ইমেজ-আপলোড এন্ডপয়েন্ট নেই। প্রতিটি অপারেশন - মেটাডেটা পড়া, রিমুভ করা, আর নতুন
             ক্যামেরা EXIF ভ্যালু লেখা - আপনার ব্রাউজারের ভেতরেই চলে, ব্রাউজারে বিল্ট-ইন File, Blob ও Web Worker API
@@ -24,7 +25,7 @@ export default function Privacy() {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-ink-900 dark:text-white">এটি কীসের উপর নির্ভর করে</h2>
+          <h2 className="text-lg font-bold text-white">এটি কীসের উপর নির্ভর করে</h2>
           <p className="mt-2">
             "লোকাল প্রসেসিং" হলো এই অ্যাপ্লিকেশনের কোডের ব্যাপারে একটি বক্তব্য, আপনার এনভায়রনমেন্ট থেকে স্বাধীন কোনো
             গ্যারান্টি নয়। এটি নির্ভর করে আপনার ব্রাউজার আমাদের ব্যবহৃত Web API-গুলো (File reading, Web Workers, Blob
@@ -34,7 +35,7 @@ export default function Privacy() {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-ink-900 dark:text-white">ছবির কন্টেন্টের উপর কোনো অ্যানালিটিক্স নেই</h2>
+          <h2 className="text-lg font-bold text-white">ছবির কন্টেন্টের উপর কোনো অ্যানালিটিক্স নেই</h2>
           <p className="mt-2">
             আপনার ছবি, এর মেটাডেটা, বা এর থেকে পাওয়া কোনো তথ্য আমরা কোনো অ্যানালিটিক্স বা থার্ড-পার্টি সার্ভিসে পাঠাই না।
             সাইট সার্ভ করার জন্য Cloudflare Pages স্ট্যান্ডার্ড স্ট্যাটিক-হোস্টিং অ্যাক্সেস লগ (IP অ্যাড্রেস, রিকোয়েস্ট করা
@@ -44,7 +45,7 @@ export default function Privacy() {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-ink-900 dark:text-white">কিছুই সংরক্ষণ করা হয় না</h2>
+          <h2 className="text-lg font-bold text-white">কিছুই সংরক্ষণ করা হয় না</h2>
           <p className="mt-2">
             আপলোড করা ফাইল শুধু আপনার সেশন চলাকালীন আপনার ব্রাউজারের মেমোরিতে থাকে। ট্যাব রিফ্রেশ বা বন্ধ করলে সেগুলো
             মুছে যায়। এই টুল কোনো ডেটাবেস ব্যবহার করে না, এবং আপনার ছবি ব্রাউজার স্টোরেজে (localStorage, IndexedDB, বা
@@ -53,7 +54,7 @@ export default function Privacy() {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-ink-900 dark:text-white">বিজ্ঞাপন</h2>
+          <h2 className="text-lg font-bold text-white">বিজ্ঞাপন</h2>
           <p className="mt-2">
             এই মুহূর্তে এই সাইটে কোনো বিজ্ঞাপন দেখানো হয় না। হোস্টিং খরচ মেটাতে ভবিষ্যতে যদি আমরা Google AdSense চালু
             করি, তাহলে এই সেকশনটি আগে আপডেট করা হবে। চালু হলে, AdSense ও এর পার্টনাররা বিজ্ঞাপন দেখাতে ও পরিমাপ করতে
@@ -63,13 +64,14 @@ export default function Privacy() {
               href="https://adssettings.google.com"
               target="_blank"
               rel="noreferrer"
-              className="text-accent-600 underline hover:text-accent-700 dark:text-accent-400"
+              className="text-neon-400 underline hover:text-neon-300"
             >
               adssettings.google.com
             </a>
             -এ নিয়ন্ত্রণ করতে পারবেন।
           </p>
         </section>
+      </div>
       </div>
     </div>
   );

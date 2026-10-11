@@ -78,15 +78,15 @@ export default function ImageUploader({ onFilesAdded, disabled }: ImageUploaderP
           setIsDragging(false);
           if (!disabled) handleFiles(e.dataTransfer.files);
         }}
-        className={`focus-ring group relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-14 text-center transition-colors ${
+        className={`focus-ring group relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-4 py-10 text-center transition-colors sm:px-6 sm:py-14 ${
           disabled
-            ? 'cursor-not-allowed border-ink-200 bg-ink-50 opacity-60 dark:border-ink-800 dark:bg-ink-900'
+            ? 'cursor-not-allowed border-cyber-700 bg-cyber-900/40 opacity-60'
             : isDragging
-              ? 'border-accent-500 bg-accent-50 dark:bg-accent-900/20'
-              : 'border-ink-200 bg-white hover:border-accent-400 hover:bg-accent-50/40 dark:border-ink-700 dark:bg-ink-900 dark:hover:border-accent-500 dark:hover:bg-accent-900/10'
+              ? 'border-neon-500 bg-neon-500/5'
+              : 'border-cyber-600 bg-cyber-900/40 hover:border-neon-500/60 hover:bg-neon-500/5'
         }`}
       >
-        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-accent-100 text-accent-700 dark:bg-accent-900/40 dark:text-accent-300">
+        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-neon-500/30 bg-neon-500/10 text-neon-400">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path
               d="M12 16V4m0 0 4 4m-4-4-4 4M5 16v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"
@@ -97,10 +97,8 @@ export default function ImageUploader({ onFilesAdded, disabled }: ImageUploaderP
             />
           </svg>
         </div>
-        <p className="text-base font-semibold text-ink-900 dark:text-white">
-          ছবি এখানে টেনে এনে ছাড়ুন, বা ব্রাউজ করতে ক্লিক করুন
-        </p>
-        <p id={`${inputId}-help`} className="mt-1.5 text-sm text-ink-500 dark:text-ink-400">
+        <p className="text-base font-semibold text-white">ছবি এখানে টেনে এনে ছাড়ুন, বা ব্রাউজ করতে ক্লিক করুন</p>
+        <p id={`${inputId}-help`} className="mt-1.5 text-sm text-cyber-300">
           JPEG, PNG বা WebP · প্রতিটি সর্বোচ্চ {formatBytesLabel(MAX_FILE_SIZE_BYTES)} · সম্পূর্ণ আপনার ডিভাইসেই প্রসেস হয়
         </p>
         <input
@@ -118,7 +116,7 @@ export default function ImageUploader({ onFilesAdded, disabled }: ImageUploaderP
         />
       </div>
       {errors.length > 0 && (
-        <ul className="mt-3 space-y-1 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300">
+        <ul className="mt-3 space-y-1 rounded-lg border border-red-900/50 bg-red-950/30 p-3 text-sm text-red-300">
           {errors.map((err, i) => (
             <li key={i}>{err}</li>
           ))}

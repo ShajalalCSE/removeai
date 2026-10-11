@@ -36,7 +36,7 @@ export default function LoginMenu() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="true"
-        className="focus-ring rounded-lg border border-ink-200 px-3 py-1.5 text-sm font-medium text-ink-700 transition-colors hover:border-accent-400 dark:border-ink-700 dark:text-ink-200"
+        className="focus-ring rounded-lg border border-cyber-600 px-3 py-1.5 text-xs font-medium text-cyber-200 transition-colors hover:border-neon-500/60 hover:text-white sm:text-sm"
       >
         লগইন
       </button>
@@ -44,24 +44,24 @@ export default function LoginMenu() {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-full mt-2 w-72 rounded-xl border border-ink-100 bg-white p-3 shadow-card dark:border-ink-800 dark:bg-ink-900"
+          className="absolute right-0 top-full mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-xl border border-cyber-700 bg-cyber-900 p-3 shadow-card"
         >
-          <div className="flex items-center gap-2 border-b border-ink-100 pb-3 dark:border-ink-800">
+          <div className="flex items-center gap-2 border-b border-cyber-700 pb-3">
             <img src="/mission-hackers-logo.png" alt="" aria-hidden="true" className="h-8 w-8 rounded-full" />
             <div>
-              <p className="text-sm font-semibold text-ink-900 dark:text-white">Mission Hackers অ্যাকাউন্ট</p>
-              <p className="text-xs text-ink-500 dark:text-ink-400">আপনার missionhacker.com লগইন দিয়ে সাইন ইন করুন</p>
+              <p className="text-sm font-semibold text-white">Mission Hackers অ্যাকাউন্ট</p>
+              <p className="text-xs text-cyber-400">আপনার missionhacker.com লগইন দিয়ে সাইন ইন করুন</p>
             </div>
           </div>
           <a
             href={LOGIN_URL}
-            className="focus-ring mt-3 block rounded-lg bg-ink-900 px-3.5 py-2 text-center text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 dark:bg-accent-600"
+            className="focus-ring mt-3 block rounded-lg border border-neon-500/50 bg-neon-500/10 px-3.5 py-2 text-center text-sm font-semibold text-neon-400 transition-all hover:-translate-y-0.5 hover:shadow-glow-green"
           >
             Mission Hacker দিয়ে লগইন করুন
           </a>
-          <p className="mt-3 text-center text-xs text-ink-500 dark:text-ink-400">
+          <p className="mt-3 text-center text-xs text-cyber-400">
             অ্যাকাউন্ট নেই?{' '}
-            <a href={REGISTER_URL} className="font-medium text-accent-600 underline hover:text-accent-700 dark:text-accent-400">
+            <a href={REGISTER_URL} className="font-medium text-neon-400 underline hover:text-neon-300">
               একটি তৈরি করুন
             </a>
           </p>

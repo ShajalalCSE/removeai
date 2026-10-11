@@ -16,14 +16,14 @@ export default function ImagePreview({ previewUrl, filename, width, height, byte
       <img
         src={previewUrl}
         alt={`${filename}-এর প্রিভিউ`}
-        className="h-20 w-20 flex-shrink-0 rounded-lg border border-ink-100 object-cover dark:border-ink-800"
+        className="h-16 w-16 flex-shrink-0 rounded-lg border border-cyber-700 object-cover sm:h-20 sm:w-20"
       />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold text-ink-900 dark:text-white" title={filename}>
+        <p className="truncate text-sm font-semibold text-white" title={filename}>
           {filename}
         </p>
-        <div className="mt-1 flex flex-wrap gap-1.5 text-xs text-ink-500 dark:text-ink-400">
-          <span className="rounded bg-ink-100 px-1.5 py-0.5 font-medium uppercase dark:bg-ink-800">{format}</span>
+        <div className="mt-1 flex flex-wrap gap-1.5 text-xs text-cyber-300">
+          <span className="rounded bg-cyber-800 px-1.5 py-0.5 font-medium uppercase">{format}</span>
           <span>
             {width}×{height}px
           </span>

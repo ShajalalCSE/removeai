@@ -97,29 +97,29 @@ export default function Home() {
 
   return (
     <div>
-      <section className="mx-auto max-w-6xl px-4 pb-10 pt-12 text-center sm:px-6 sm:pt-16">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-100 px-3 py-1 text-xs font-semibold text-accent-800 dark:bg-accent-900/40 dark:text-accent-200">
+      <section className="mx-auto max-w-6xl px-4 pb-10 pt-10 text-center sm:px-6 sm:pt-16">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-neon-500/40 bg-neon-500/10 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wide text-neon-400 sm:text-xs">
           100% ক্লায়েন্ট-সাইড · কোনো ছবি কখনো আপলোড হয় না
         </span>
-        <h1 className="mx-auto mt-5 max-w-2xl text-4xl font-extrabold tracking-tight text-ink-900 dark:text-white sm:text-5xl">
+        <h1 className="mx-auto mt-5 max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
           আপনার ব্রাউজারেই ছবি থেকে AI ট্যাগ ও লুকানো মেটাডেটা রিমুভ করুন
         </h1>
-        <p className="mx-auto mt-4 max-w-xl text-base text-ink-500 dark:text-ink-400">
+        <p className="mx-auto mt-4 max-w-xl text-sm text-cyber-200 sm:text-base">
           একটি JPEG, PNG বা WebP আপলোড করুন, এতে ঠিক কী কী তথ্য লুকানো আছে দেখুন, আর AI-জেনারেটরের ছাপ বা সব ধরনের
           মেটাডেটা মুছে ফেলুন - আপনার ডিভাইস থেকে ছবি কখনো বাইরে না গিয়েই।
         </p>
 
-        <div className="mx-auto mt-6 grid max-w-xl grid-cols-3 gap-3 text-sm">
+        <div className="mx-auto mt-6 grid max-w-xl grid-cols-3 gap-2 text-sm sm:gap-3">
           {[
             ['1', 'আপলোড'],
             ['2', 'প্রসেস'],
             ['3', 'ডাউনলোড'],
           ].map(([n, label]) => (
-            <div key={n} className="flex flex-col items-center gap-1.5 rounded-xl border border-ink-100 bg-white p-3 dark:border-ink-800 dark:bg-ink-900">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ink-900 text-xs font-bold text-white dark:bg-accent-600">
+            <div key={n} className="flex flex-col items-center gap-1.5 rounded-xl border border-cyber-700 bg-cyber-900/60 p-2.5 sm:p-3">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-neon-500 font-mono text-xs font-bold text-cyber-950">
                 {n}
               </span>
-              <span className="font-medium text-ink-700 dark:text-ink-200">{label}</span>
+              <span className="font-medium text-cyber-100">{label}</span>
             </div>
           ))}
         </div>
@@ -128,7 +128,7 @@ export default function Home() {
       <section className="mx-auto max-w-4xl px-4 sm:px-6">
         <ImageUploader onFilesAdded={addFiles} />
         {loadErrors.length > 0 && (
-          <ul className="mt-3 space-y-1 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300">
+          <ul className="mt-3 space-y-1 rounded-lg border border-red-900/50 bg-red-950/30 p-3 text-sm text-red-300">
             {loadErrors.map((e, i) => (
               <li key={i}>{e}</li>
             ))}
@@ -138,13 +138,13 @@ export default function Home() {
 
       {images.length > 0 && (
         <section className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-bold text-ink-900 dark:text-white">{images.length}টি ছবি</h2>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-lg font-bold text-white">{images.length}টি ছবি</h2>
             {hasResults && (
               <button
                 type="button"
                 onClick={downloadAll}
-                className="focus-ring rounded-lg border border-ink-200 bg-white px-3.5 py-2 text-sm font-semibold text-ink-700 hover:border-accent-400 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-200"
+                className="focus-ring rounded-lg border border-cyber-600 bg-cyber-900 px-3.5 py-2 text-sm font-semibold text-cyber-100 hover:border-neon-500/60"
               >
                 সবগুলো প্রসেস করা ছবি ডাউনলোড করুন
               </button>

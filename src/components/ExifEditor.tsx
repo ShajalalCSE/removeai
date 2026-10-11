@@ -24,7 +24,7 @@ function TextField({
 }) {
   return (
     <div>
-      <label htmlFor={id} className="mb-1 block text-xs font-medium text-ink-600 dark:text-ink-300">
+      <label htmlFor={id} className="mb-1 block text-xs font-medium text-cyber-300">
         {label}
       </label>
       <input
@@ -33,7 +33,7 @@ function TextField({
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className="focus-ring w-full rounded-md border border-ink-200 bg-white px-2.5 py-1.5 text-sm text-ink-900 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+        className="focus-ring w-full rounded-md border border-cyber-600 bg-cyber-900 px-2.5 py-1.5 text-sm text-white placeholder:text-cyber-500"
       />
     </div>
   );
@@ -60,20 +60,20 @@ export default function ExifEditor({ onApply, busy }: ExifEditorProps) {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-lg border border-ink-200 bg-ink-50/60 p-3 text-xs text-ink-600 dark:border-ink-700 dark:bg-ink-900/40 dark:text-ink-300">
-        এখানে দেওয়া ভ্যালুগুলো <strong>ইউজার-সাপ্লাইড বা সিমুলেটেড</strong>, সত্যিকারের ক্যামেরা থেকে পাওয়া ভেরিফায়েড
+      <div className="rounded-lg border border-cyber-700 bg-cyber-900/40 p-3 text-xs text-cyber-300">
+        এখানে দেওয়া ভ্যালুগুলো <strong className="text-cyber-100">ইউজার-সাপ্লাইড বা সিমুলেটেড</strong>, সত্যিকারের ক্যামেরা থেকে পাওয়া ভেরিফায়েড
         তথ্য নয়। GPS কোঅর্ডিনেট ও সিরিয়াল নম্বর কখনোই অটোমেটিক্যালি তৈরি করা হয় না। খালি রাখা ফিল্ড লেখা হয় না।
       </div>
 
       <div>
-        <label htmlFor={`${formId}-preset`} className="mb-1 block text-xs font-medium text-ink-600 dark:text-ink-300">
+        <label htmlFor={`${formId}-preset`} className="mb-1 block text-xs font-medium text-cyber-300">
           ক্যামেরা প্রোফাইল প্রিসেট (ঐচ্ছিক, সিমুলেটেড)
         </label>
         <select
           id={`${formId}-preset`}
           onChange={(e) => e.target.value && applyPreset(e.target.value)}
           defaultValue=""
-          className="focus-ring w-full rounded-md border border-ink-200 bg-white px-2.5 py-1.5 text-sm text-ink-900 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+          className="focus-ring w-full rounded-md border border-cyber-600 bg-cyber-900 px-2.5 py-1.5 text-sm text-white"
         >
           <option value="">ফর্ম প্রিফিল করতে একটি প্রিসেট বেছে নিন…</option>
           {CAMERA_PRESETS.map((p) => (
@@ -84,7 +84,7 @@ export default function ExifEditor({ onApply, busy }: ExifEditorProps) {
         </select>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 xs:grid-cols-2">
         <TextField id={`${formId}-make`} label="ক্যামেরা মেক" value={fields.make ?? ''} onChange={(v) => set('make', v)} placeholder="Canon" />
         <TextField id={`${formId}-model`} label="ক্যামেরা মডেল" value={fields.model ?? ''} onChange={(v) => set('model', v)} placeholder="EOS R5" />
         <TextField
@@ -119,14 +119,14 @@ export default function ExifEditor({ onApply, busy }: ExifEditorProps) {
         />
 
         <div>
-          <label htmlFor={`${formId}-flash`} className="mb-1 block text-xs font-medium text-ink-600 dark:text-ink-300">
+          <label htmlFor={`${formId}-flash`} className="mb-1 block text-xs font-medium text-cyber-300">
             ফ্ল্যাশ
           </label>
           <select
             id={`${formId}-flash`}
             value={fields.flash ?? ''}
             onChange={(e) => set('flash', (e.target.value || undefined) as CameraExifFields['flash'])}
-            className="focus-ring w-full rounded-md border border-ink-200 bg-white px-2.5 py-1.5 text-sm text-ink-900 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+            className="focus-ring w-full rounded-md border border-cyber-600 bg-cyber-900 px-2.5 py-1.5 text-sm text-white"
           >
             <option value="">সেট করা নেই</option>
             <option value="fired">ফায়ার্ড</option>
@@ -135,14 +135,14 @@ export default function ExifEditor({ onApply, busy }: ExifEditorProps) {
         </div>
 
         <div>
-          <label htmlFor={`${formId}-wb`} className="mb-1 block text-xs font-medium text-ink-600 dark:text-ink-300">
+          <label htmlFor={`${formId}-wb`} className="mb-1 block text-xs font-medium text-cyber-300">
             হোয়াইট ব্যালেন্স
           </label>
           <select
             id={`${formId}-wb`}
             value={fields.whiteBalance ?? ''}
             onChange={(e) => set('whiteBalance', (e.target.value || undefined) as CameraExifFields['whiteBalance'])}
-            className="focus-ring w-full rounded-md border border-ink-200 bg-white px-2.5 py-1.5 text-sm text-ink-900 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+            className="focus-ring w-full rounded-md border border-cyber-600 bg-cyber-900 px-2.5 py-1.5 text-sm text-white"
           >
             <option value="">সেট করা নেই</option>
             <option value="auto">অটো</option>
@@ -151,14 +151,14 @@ export default function ExifEditor({ onApply, busy }: ExifEditorProps) {
         </div>
 
         <div>
-          <label htmlFor={`${formId}-orientation`} className="mb-1 block text-xs font-medium text-ink-600 dark:text-ink-300">
+          <label htmlFor={`${formId}-orientation`} className="mb-1 block text-xs font-medium text-cyber-300">
             ওরিয়েন্টেশন
           </label>
           <select
             id={`${formId}-orientation`}
             value={fields.orientation ?? ''}
             onChange={(e) => set('orientation', e.target.value || undefined)}
-            className="focus-ring w-full rounded-md border border-ink-200 bg-white px-2.5 py-1.5 text-sm text-ink-900 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+            className="focus-ring w-full rounded-md border border-cyber-600 bg-cyber-900 px-2.5 py-1.5 text-sm text-white"
           >
             <option value="">সেট করা নেই</option>
             <option value="1">1 - নরমাল</option>
@@ -171,19 +171,19 @@ export default function ExifEditor({ onApply, busy }: ExifEditorProps) {
         <TextField id={`${formId}-software`} label="সফটওয়্যার" value={fields.software ?? ''} onChange={(v) => set('software', v)} placeholder="v1.0" />
       </div>
 
-      <div className="flex items-center gap-3 pt-1">
+      <div className="flex flex-wrap items-center gap-3 pt-1">
         <button
           type="button"
           disabled={!hasAnyValue || busy}
           onClick={() => onApply(fields)}
-          className="focus-ring rounded-lg bg-ink-900 px-4 py-2 text-sm font-semibold text-white shadow-soft transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0 dark:bg-accent-600"
+          className="focus-ring rounded-lg border border-neon-500/50 bg-neon-500/10 px-4 py-2 text-sm font-semibold text-neon-400 transition-all hover:-translate-y-0.5 hover:shadow-glow-green disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0 disabled:hover:shadow-none"
         >
           {busy ? 'EXIF লেখা হচ্ছে…' : 'ছবিতে EXIF প্রয়োগ করুন'}
         </button>
         <button
           type="button"
           onClick={() => setFields(defaultFields())}
-          className="focus-ring rounded-lg px-3 py-2 text-sm font-medium text-ink-500 hover:text-ink-800 dark:text-ink-400 dark:hover:text-white"
+          className="focus-ring rounded-lg px-3 py-2 text-sm font-medium text-cyber-400 hover:text-white"
         >
           ক্লিয়ার করুন
         </button>

@@ -4,6 +4,9 @@ export default {
   darkMode: 'media',
   theme: {
     extend: {
+      screens: {
+        xs: '380px',
+      },
       colors: {
         ink: {
           50: '#f5f7fa',

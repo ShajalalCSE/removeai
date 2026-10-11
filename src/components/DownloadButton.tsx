@@ -8,11 +8,11 @@ interface DownloadButtonProps {
 }
 
 export default function DownloadButton({ blob, filename, label = 'ডাউনলোড করুন', variant = 'primary' }: DownloadButtonProps) {
-  const base = 'focus-ring inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-soft transition-transform hover:-translate-y-0.5';
+  const base = 'focus-ring inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all hover:-translate-y-0.5';
   const styles =
     variant === 'primary'
-      ? 'bg-accent-600 text-white hover:bg-accent-700'
-      : 'border border-ink-200 bg-white text-ink-700 hover:border-accent-400 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-200';
+      ? 'border border-neon-500/50 bg-neon-500/10 text-neon-400 hover:shadow-glow-green'
+      : 'border border-cyber-600 bg-cyber-900 text-cyber-200 hover:border-neon-500/60';
 
   return (
     <button type="button" onClick={() => downloadBlob(blob, filename)} className={`${base} ${styles}`}>

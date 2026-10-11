@@ -39,27 +39,29 @@ export default function Faq() {
   );
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
-      <h1 className="text-3xl font-extrabold tracking-tight text-ink-900 dark:text-white">প্রায়শই জিজ্ঞাসিত প্রশ্ন</h1>
-      <div className="mt-8 divide-y divide-ink-100 dark:divide-ink-800">
+    <div className="bg-cyber-950 text-cyber-100">
+      <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
+      <h1 className="text-3xl font-extrabold tracking-tight text-white">প্রায়শই জিজ্ঞাসিত প্রশ্ন</h1>
+      <div className="mt-8 divide-y divide-cyber-700">
         {FAQS.map(([q, a], i) => (
           <details key={i} className="group py-5">
-            <summary className="focus-ring flex cursor-pointer list-none items-center justify-between gap-4 rounded-md text-left text-base font-semibold text-ink-900 dark:text-white">
+            <summary className="focus-ring flex cursor-pointer list-none items-center justify-between gap-4 rounded-md text-left text-base font-semibold text-white">
               {q}
               <svg
                 width="18"
                 height="18"
                 viewBox="0 0 24 24"
                 fill="none"
-                className="flex-shrink-0 text-ink-400 transition-transform group-open:rotate-45"
+                className="flex-shrink-0 text-neon-500 transition-transform group-open:rotate-45"
                 aria-hidden="true"
               >
                 <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
               </svg>
             </summary>
-            <p className="mt-3 text-sm leading-relaxed text-ink-500 dark:text-ink-400">{a}</p>
+            <p className="mt-3 text-sm leading-relaxed text-cyber-300">{a}</p>
           </details>
         ))}
+      </div>
       </div>
     </div>
   );
