@@ -107,7 +107,7 @@ export const TOOLS: ToolDef[] = [
     description: 'একটি ছবিতে সাপোর্টেড C2PA কন্টেন্ট ক্রেডেনশিয়ালস ও প্রোভেন্যান্স তথ্য পরীক্ষা করুন।',
     cta: 'ANALYZE IMAGE',
     route: '/c2pa-checker',
-    status: 'coming-soon',
+    status: 'available',
   },
   {
     id: 'ai-provenance-inspector',
@@ -118,7 +118,7 @@ export const TOOLS: ToolDef[] = [
     description: 'একটি ছবির সাথে যুক্ত উপলব্ধ প্রোভেন্যান্স রেকর্ড ও সাপোর্টেড ইন্ডিকেটর পরীক্ষা করুন।',
     cta: 'INVESTIGATE ORIGIN',
     route: '/ai-provenance-inspector',
-    status: 'coming-soon',
+    status: 'available',
   },
   {
     id: 'image-privacy-checker',
@@ -151,7 +151,7 @@ export const TOOLS: ToolDef[] = [
     description: 'সাপোর্টেড IPTC ও XMP মেটাডেটা ফিল্ড পরীক্ষা করুন ও রিমুভ করুন।',
     cta: 'CLEAN METADATA',
     route: '/iptc-xmp-cleaner',
-    status: 'coming-soon',
+    status: 'available',
   },
   {
     id: 'bulk-metadata-remover',
@@ -162,7 +162,7 @@ export const TOOLS: ToolDef[] = [
     description: 'একসাথে একাধিক সাপোর্টেড ছবি প্রসেস করুন এবং পরিষ্কার করা ফাইলগুলো একসাথে ডাউনলোড করুন।',
     cta: 'START BULK CLEANUP',
     route: '/bulk-metadata-remover',
-    status: 'coming-soon',
+    status: 'available',
   },
   {
     id: 'metadata-comparison',
@@ -186,7 +186,7 @@ export const TOOLS: ToolDef[] = [
     description: 'সাপোর্টেড কম্প্রেশন অপশন ব্যবহার করে ছবির ফাইল সাইজ কমান।',
     cta: 'OPTIMIZE IMAGE',
     route: '/image-compressor',
-    status: 'coming-soon',
+    status: 'available',
   },
   {
     id: 'image-converter',
@@ -197,7 +197,7 @@ export const TOOLS: ToolDef[] = [
     description: 'সাপোর্টেড ছবি সাধারণ ফরম্যাটের মধ্যে কনভার্ট করুন।',
     cta: 'CONVERT IMAGE',
     route: '/image-converter',
-    status: 'coming-soon',
+    status: 'available',
   },
   {
     id: 'image-resizer',
@@ -208,7 +208,7 @@ export const TOOLS: ToolDef[] = [
     description: 'ছবি আপনার পছন্দমতো কাস্টম ডাইমেনশনে রিসাইজ করুন।',
     cta: 'RESIZE IMAGE',
     route: '/image-resizer',
-    status: 'coming-soon',
+    status: 'available',
   },
   {
     id: 'png-to-jpg',
@@ -219,7 +219,7 @@ export const TOOLS: ToolDef[] = [
     description: 'PNG ছবিকে JPG ফাইলে কনভার্ট করুন।',
     cta: 'CONVERT PNG → JPG',
     route: '/png-to-jpg',
-    status: 'coming-soon',
+    status: 'available',
   },
   {
     id: 'jpg-to-png',
@@ -230,7 +230,7 @@ export const TOOLS: ToolDef[] = [
     description: 'JPG ছবিকে PNG ফাইলে কনভার্ট করুন।',
     cta: 'CONVERT JPG → PNG',
     route: '/jpg-to-png',
-    status: 'coming-soon',
+    status: 'available',
   },
   {
     id: 'webp-converter',
@@ -241,7 +241,7 @@ export const TOOLS: ToolDef[] = [
     description: 'ব্রাউজার ও প্রসেসিং লাইব্রেরি সাপোর্ট করলে সাপোর্টেড ছবি WebP-তে কনভার্ট করুন।',
     cta: 'CONVERT TO WEBP',
     route: '/webp-converter',
-    status: 'coming-soon',
+    status: 'available',
   },
 
   // Category C: Document Forensics

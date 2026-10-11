@@ -2,6 +2,8 @@
 // components can `await client.clean(file, mode)` without touching postMessage.
 
 import type { CameraExifFields, CleanMode, CleanResult, ExifWriteResult, GpsRemovalResult, MetadataReport } from '../types/metadata';
+import type { TransformOptions, TransformResult } from './image-transform';
+import type { C2paInfo } from './c2pa';
 
 interface PendingEntry {
   resolve: (value: any) => void;
@@ -56,6 +58,16 @@ class ImageWorkerClient {
 
   async removeGps(file: File): Promise<GpsRemovalResult> {
     const data = await this.send<{ result: GpsRemovalResult }>({ type: 'remove-gps', file });
+    return data.result;
+  }
+
+  async transform(file: File, options: TransformOptions): Promise<TransformResult> {
+    const data = await this.send<{ result: TransformResult }>({ type: 'transform', file, options });
+    return data.result;
+  }
+
+  async readC2pa(file: File): Promise<C2paInfo> {
+    const data = await this.send<{ result: C2paInfo }>({ type: 'read-c2pa', file });
     return data.result;
   }
 

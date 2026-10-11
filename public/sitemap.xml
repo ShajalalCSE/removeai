@@ -8,6 +8,16 @@
   <url><loc>https://removeai.missionhacker.com/image-privacy-checker</loc><priority>0.8</priority></url>
   <url><loc>https://removeai.missionhacker.com/metadata-comparison</loc><priority>0.8</priority></url>
   <url><loc>https://removeai.missionhacker.com/exif-metadata-remover</loc><priority>0.8</priority></url>
+  <url><loc>https://removeai.missionhacker.com/c2pa-checker</loc><priority>0.8</priority></url>
+  <url><loc>https://removeai.missionhacker.com/ai-provenance-inspector</loc><priority>0.8</priority></url>
+  <url><loc>https://removeai.missionhacker.com/iptc-xmp-cleaner</loc><priority>0.7</priority></url>
+  <url><loc>https://removeai.missionhacker.com/bulk-metadata-remover</loc><priority>0.7</priority></url>
+  <url><loc>https://removeai.missionhacker.com/image-compressor</loc><priority>0.7</priority></url>
+  <url><loc>https://removeai.missionhacker.com/image-converter</loc><priority>0.7</priority></url>
+  <url><loc>https://removeai.missionhacker.com/image-resizer</loc><priority>0.7</priority></url>
+  <url><loc>https://removeai.missionhacker.com/png-to-jpg</loc><priority>0.7</priority></url>
+  <url><loc>https://removeai.missionhacker.com/jpg-to-png</loc><priority>0.7</priority></url>
+  <url><loc>https://removeai.missionhacker.com/webp-converter</loc><priority>0.7</priority></url>
   <url><loc>https://removeai.missionhacker.com/faq</loc><priority>0.6</priority></url>
   <url><loc>https://removeai.missionhacker.com/about</loc><priority>0.4</priority></url>
   <url><loc>https://removeai.missionhacker.com/contact</loc><priority>0.4</priority></url>

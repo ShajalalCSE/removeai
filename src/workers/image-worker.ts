@@ -8,19 +8,25 @@ import { readMetadata } from '../lib/metadata-reader';
 import { writeCameraExif } from '../lib/exif-writer';
 import { sniffFormat } from '../lib/format';
 import { bufToUint8 } from '../lib/binary';
+import { transformImage, type TransformOptions } from '../lib/image-transform';
+import { readC2paInfo } from '../lib/c2pa';
 import type { CameraExifFields, CleanMode } from '../types/metadata';
 
 export type WorkerRequest =
   | { type: 'read'; id: string; file: File }
   | { type: 'clean'; id: string; file: File; mode: CleanMode }
   | { type: 'write-exif'; id: string; file: File; fields: CameraExifFields }
-  | { type: 'remove-gps'; id: string; file: File };
+  | { type: 'remove-gps'; id: string; file: File }
+  | { type: 'transform'; id: string; file: File; options: TransformOptions }
+  | { type: 'read-c2pa'; id: string; file: File };
 
 export type WorkerResponse =
   | { type: 'read-result'; id: string; ok: true; report: Awaited<ReturnType<typeof readMetadata>>; width: number; height: number }
   | { type: 'clean-result'; id: string; ok: true; result: Awaited<ReturnType<typeof cleanImage>> }
   | { type: 'write-exif-result'; id: string; ok: true; result: Awaited<ReturnType<typeof writeCameraExif>> }
   | { type: 'remove-gps-result'; id: string; ok: true; result: Awaited<ReturnType<typeof removeGpsOnly>> }
+  | { type: 'transform-result'; id: string; ok: true; result: Awaited<ReturnType<typeof transformImage>> }
+  | { type: 'read-c2pa-result'; id: string; ok: true; result: Awaited<ReturnType<typeof readC2paInfo>> }
   | { type: string; id: string; ok: false; error: string };
 
 self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
@@ -46,6 +52,12 @@ self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
     } else if (msg.type === 'remove-gps') {
       const result = await removeGpsOnly(msg.file);
       post({ type: 'remove-gps-result', id: msg.id, ok: true, result });
+    } else if (msg.type === 'transform') {
+      const result = await transformImage(msg.file, msg.options);
+      post({ type: 'transform-result', id: msg.id, ok: true, result });
+    } else if (msg.type === 'read-c2pa') {
+      const result = await readC2paInfo(msg.file);
+      post({ type: 'read-c2pa-result', id: msg.id, ok: true, result });
     }
   } catch (err) {
     post({ type: `${msg.type}-error`, id: msg.id, ok: false, error: err instanceof Error ? err.message : String(err) });

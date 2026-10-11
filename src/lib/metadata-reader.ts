@@ -45,7 +45,7 @@ const KNOWN_AI_TOOLS = [
   'nano banana',
 ];
 
-function detectAiToolMentions(text: string): string[] {
+export function detectAiToolMentions(text: string): string[] {
   const lower = text.toLowerCase();
   const found: string[] = [];
   for (const tool of KNOWN_AI_TOOLS) {
