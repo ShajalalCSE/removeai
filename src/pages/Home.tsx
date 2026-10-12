@@ -102,7 +102,7 @@ export default function Home() {
           100% ক্লায়েন্ট-সাইড · কোনো ছবি কখনো আপলোড হয় না
         </span>
         <h1 className="mx-auto mt-5 max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
-          AI দিয়ে তৈরি ছবি থেকে "AI Content" বা "AI লেবেল" রিমুভ করুন
+          AI দিয়ে তৈরি ছবি থেকে AI Content বা AI লেবেল রিমুভ করুন
           <span className="mt-1 block text-neon-400">একদম বিনামূল্যে।</span>
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-sm text-cyber-200 sm:text-base">

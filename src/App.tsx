@@ -24,6 +24,13 @@ import ImageResizer from './pages/tools/ImageResizer';
 import PngToJpg from './pages/tools/PngToJpg';
 import JpgToPng from './pages/tools/JpgToPng';
 import WebpConverter from './pages/tools/WebpConverter';
+import PdfMetadataViewer from './pages/tools/PdfMetadataViewer';
+import PdfMetadataRemover from './pages/tools/PdfMetadataRemover';
+import DocxMetadataCleaner from './pages/tools/DocxMetadataCleaner';
+import DocumentInspector from './pages/tools/DocumentInspector';
+import AudioMetadataViewer from './pages/tools/AudioMetadataViewer';
+import Mp3TagCleaner from './pages/tools/Mp3TagCleaner';
+import AudioMetadataRemover from './pages/tools/AudioMetadataRemover';
 
 export default function App() {
   return (
@@ -55,6 +62,13 @@ export default function App() {
           <Route path="/png-to-jpg" element={<PngToJpg />} />
           <Route path="/jpg-to-png" element={<JpgToPng />} />
           <Route path="/webp-converter" element={<WebpConverter />} />
+          <Route path="/pdf-metadata-viewer" element={<PdfMetadataViewer />} />
+          <Route path="/pdf-metadata-remover" element={<PdfMetadataRemover />} />
+          <Route path="/docx-metadata-cleaner" element={<DocxMetadataCleaner />} />
+          <Route path="/document-inspector" element={<DocumentInspector />} />
+          <Route path="/audio-metadata-viewer" element={<AudioMetadataViewer />} />
+          <Route path="/mp3-tag-cleaner" element={<Mp3TagCleaner />} />
+          <Route path="/audio-metadata-remover" element={<AudioMetadataRemover />} />
 
           <Route path="*" element={<Home />} />
         </Routes>

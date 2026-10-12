@@ -1,0 +1,123 @@
+import { useCallback, useId, useRef, useState } from 'react';
+import { UploadCloud, X } from 'lucide-react';
+import { formatBytes } from '../../lib/binary';
+
+interface GenericFileUploaderProps {
+  accept: string; // e.g. "application/pdf"
+  acceptLabel: string; // e.g. "PDF"
+  maxSizeBytes: number;
+  onFileSelected: (file: File) => void;
+  selectedFile: File | null;
+  onClear: () => void;
+  disabled?: boolean;
+}
+
+export default function GenericFileUploader({ accept, acceptLabel, maxSizeBytes, onFileSelected, selectedFile, onClear, disabled }: GenericFileUploaderProps) {
+  const [isDragging, setIsDragging] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const inputId = useId();
+  const dragCounter = useRef(0);
+
+  const handleFiles = useCallback(
+    (fileList: FileList | null) => {
+      if (!fileList || fileList.length === 0) return;
+      const file = fileList[0];
+      if (file.size === 0) {
+        setError(`"${file.name}" খালি মনে হচ্ছে।`);
+        return;
+      }
+      if (file.size > maxSizeBytes) {
+        setError(`"${file.name}" সাইজে অনেক বড় (${formatBytes(file.size)})। সর্বোচ্চ সীমা ${formatBytes(maxSizeBytes)}।`);
+        return;
+      }
+      setError(null);
+      onFileSelected(file);
+    },
+    [onFileSelected, maxSizeBytes],
+  );
+
+  if (selectedFile) {
+    return (
+      <div className="flex items-center justify-between gap-3 rounded-lg border border-cyber-600 bg-cyber-900/60 p-4">
+        <div className="min-w-0">
+          <p className="truncate font-mono text-sm font-semibold text-white">{selectedFile.name}</p>
+          <p className="text-xs text-cyber-300">{formatBytes(selectedFile.size)}</p>
+        </div>
+        <button
+          type="button"
+          onClick={onClear}
+          disabled={disabled}
+          aria-label="ফাইল সরান"
+          className="focus-ring-neon flex-shrink-0 rounded-md p-1.5 text-cyber-300 hover:bg-cyber-800 hover:text-white disabled:opacity-40"
+        >
+          <X size={16} aria-hidden="true" />
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div
+        role="button"
+        tabIndex={0}
+        aria-disabled={disabled}
+        aria-describedby={`${inputId}-help`}
+        onClick={() => !disabled && inputRef.current?.click()}
+        onKeyDown={(e) => {
+          if ((e.key === 'Enter' || e.key === ' ') && !disabled) {
+            e.preventDefault();
+            inputRef.current?.click();
+          }
+        }}
+        onDragEnter={(e) => {
+          e.preventDefault();
+          dragCounter.current += 1;
+          if (!disabled) setIsDragging(true);
+        }}
+        onDragOver={(e) => e.preventDefault()}
+        onDragLeave={(e) => {
+          e.preventDefault();
+          dragCounter.current -= 1;
+          if (dragCounter.current <= 0) {
+            dragCounter.current = 0;
+            setIsDragging(false);
+          }
+        }}
+        onDrop={(e) => {
+          e.preventDefault();
+          dragCounter.current = 0;
+          setIsDragging(false);
+          if (!disabled) handleFiles(e.dataTransfer.files);
+        }}
+        className={`focus-ring-neon flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-10 text-center transition-colors ${
+          disabled
+            ? 'cursor-not-allowed border-cyber-700 bg-cyber-900/30 opacity-50'
+            : isDragging
+              ? 'border-neon-500 bg-neon-500/5'
+              : 'border-cyber-600 bg-cyber-900/40 hover:border-neon-500/60'
+        }`}
+      >
+        <UploadCloud size={28} className="mb-3 text-neon-400" aria-hidden="true" />
+        <p className="text-sm font-semibold text-white">ফাইল টেনে এনে ছাড়ুন, বা ক্লিক করুন</p>
+        <p id={`${inputId}-help`} className="mt-1 text-xs text-cyber-300">
+          {acceptLabel} · সর্বোচ্চ {formatBytes(maxSizeBytes)}
+        </p>
+        <input
+          ref={inputRef}
+          id={inputId}
+          type="file"
+          accept={accept}
+          disabled={disabled}
+          className="sr-only"
+          onChange={(e) => {
+            handleFiles(e.target.files);
+            e.target.value = '';
+          }}
+        />
+      </div>
+      {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
+    </div>
+  );
+}

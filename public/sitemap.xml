@@ -18,6 +18,13 @@
   <url><loc>https://removeai.missionhacker.com/png-to-jpg</loc><priority>0.7</priority></url>
   <url><loc>https://removeai.missionhacker.com/jpg-to-png</loc><priority>0.7</priority></url>
   <url><loc>https://removeai.missionhacker.com/webp-converter</loc><priority>0.7</priority></url>
+  <url><loc>https://removeai.missionhacker.com/pdf-metadata-viewer</loc><priority>0.7</priority></url>
+  <url><loc>https://removeai.missionhacker.com/pdf-metadata-remover</loc><priority>0.7</priority></url>
+  <url><loc>https://removeai.missionhacker.com/docx-metadata-cleaner</loc><priority>0.7</priority></url>
+  <url><loc>https://removeai.missionhacker.com/document-inspector</loc><priority>0.7</priority></url>
+  <url><loc>https://removeai.missionhacker.com/audio-metadata-viewer</loc><priority>0.6</priority></url>
+  <url><loc>https://removeai.missionhacker.com/mp3-tag-cleaner</loc><priority>0.6</priority></url>
+  <url><loc>https://removeai.missionhacker.com/audio-metadata-remover</loc><priority>0.6</priority></url>
   <url><loc>https://removeai.missionhacker.com/faq</loc><priority>0.6</priority></url>
   <url><loc>https://removeai.missionhacker.com/about</loc><priority>0.4</priority></url>
   <url><loc>https://removeai.missionhacker.com/contact</loc><priority>0.4</priority></url>

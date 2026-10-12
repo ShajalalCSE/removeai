@@ -254,7 +254,7 @@ export const TOOLS: ToolDef[] = [
     description: 'উপলব্ধ PDF প্রোপার্টি, ডকুমেন্ট তথ্য ও সাপোর্টেড মেটাডেটা ফিল্ড পরীক্ষা করুন।',
     cta: 'SCAN PDF',
     route: '/pdf-metadata-viewer',
-    status: 'coming-soon',
+    status: 'available',
   },
   {
     id: 'pdf-metadata-remover',
@@ -265,7 +265,7 @@ export const TOOLS: ToolDef[] = [
     description: 'কম্প্যাটিবল PDF ফাইল থেকে সাপোর্টেড ডকুমেন্ট মেটাডেটা রিমুভ করুন।',
     cta: 'CLEAN PDF',
     route: '/pdf-metadata-remover',
-    status: 'coming-soon',
+    status: 'available',
   },
   {
     id: 'docx-metadata-cleaner',
@@ -276,7 +276,7 @@ export const TOOLS: ToolDef[] = [
     description: 'DOCX ফাইলে সাপোর্টেড ডকুমেন্ট প্রোপার্টি পরীক্ষা ও পরিষ্কার করুন।',
     cta: 'CLEAN DOCUMENT',
     route: '/docx-metadata-cleaner',
-    status: 'coming-soon',
+    status: 'available',
   },
   {
     id: 'document-inspector',
@@ -287,7 +287,7 @@ export const TOOLS: ToolDef[] = [
     description: 'সাপোর্টেড ডকুমেন্ট প্রোপার্টি পরীক্ষা করুন ও সম্ভাব্য সংবেদনশীল তথ্য শনাক্ত করুন।',
     cta: 'INSPECT FILE',
     route: '/document-inspector',
-    status: 'coming-soon',
+    status: 'available',
   },
 
   // Category D: Video Forensics
@@ -324,7 +324,7 @@ export const TOOLS: ToolDef[] = [
     description: 'সাপোর্টেড অডিও ট্যাগ ও ফাইল প্রোপার্টি পরীক্ষা করুন।',
     cta: 'SCAN AUDIO',
     route: '/audio-metadata-viewer',
-    status: 'coming-soon',
+    status: 'available',
   },
   {
     id: 'mp3-tag-cleaner',
@@ -335,7 +335,7 @@ export const TOOLS: ToolDef[] = [
     description: 'MP3 ফাইল থেকে সাপোর্টেড ID3 ট্যাগ রিমুভ করুন।',
     cta: 'CLEAN AUDIO TAGS',
     route: '/mp3-tag-cleaner',
-    status: 'coming-soon',
+    status: 'available',
   },
   {
     id: 'audio-metadata-remover',
@@ -346,6 +346,6 @@ export const TOOLS: ToolDef[] = [
     description: 'কম্প্যাটিবল অডিও ফাইল থেকে সাপোর্টেড মেটাডেটা রিমুভ করুন।',
     cta: 'CLEAN AUDIO',
     route: '/audio-metadata-remover',
-    status: 'coming-soon',
+    status: 'available',
   },
 ];
