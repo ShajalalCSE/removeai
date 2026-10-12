@@ -2,6 +2,7 @@ import { useCallback, useId, useRef, useState } from 'react';
 import { UploadCloud, X } from 'lucide-react';
 import { ACCEPTED_MIME_TYPES, MAX_FILE_SIZE_BYTES } from '../../lib/format';
 import { formatBytes } from '../../lib/binary';
+import { toStableFile } from '../../lib/file-utils';
 
 interface PlatformUploaderProps {
   onFileSelected: (file: File) => void;
@@ -35,7 +36,7 @@ export default function PlatformUploader({ onFileSelected, selectedFile, onClear
   const dragCounter = useRef(0);
 
   const handleFiles = useCallback(
-    (fileList: FileList | null) => {
+    async (fileList: FileList | null) => {
       if (!fileList || fileList.length === 0) return;
       const file = fileList[0];
       const err = validateFile(file);
@@ -43,8 +44,12 @@ export default function PlatformUploader({ onFileSelected, selectedFile, onClear
         setError(err);
         return;
       }
-      setError(null);
-      onFileSelected(file);
+      try {
+        setError(null);
+        onFileSelected(await toStableFile(file));
+      } catch {
+        setError(`"${file.name}" পড়া যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।`);
+      }
     },
     [onFileSelected],
   );
@@ -125,8 +130,10 @@ export default function PlatformUploader({ onFileSelected, selectedFile, onClear
           disabled={disabled}
           className="sr-only"
           onChange={(e) => {
-            handleFiles(e.target.files);
-            e.target.value = '';
+            const input = e.target;
+            handleFiles(input.files).finally(() => {
+              input.value = '';
+            });
           }}
         />
       </div>

@@ -1,6 +1,7 @@
 import { useCallback, useId, useRef, useState } from 'react';
 import { ACCEPTED_MIME_TYPES, MAX_FILE_SIZE_BYTES } from '../lib/format';
 import { formatBytes as formatBytesLabel } from '../lib/binary';
+import { toStableFile } from '../lib/file-utils';
 
 interface ImageUploaderProps {
   onFilesAdded: (files: File[]) => void;
@@ -28,15 +29,22 @@ export default function ImageUploader({ onFilesAdded, disabled }: ImageUploaderP
   const dragCounter = useRef(0);
 
   const handleFiles = useCallback(
-    (fileList: FileList | null) => {
+    async (fileList: FileList | null) => {
       if (!fileList || fileList.length === 0) return;
       const files = Array.from(fileList);
       const valid: File[] = [];
       const newErrors: string[] = [];
       for (const file of files) {
         const err = validateFile(file);
-        if (err) newErrors.push(err);
-        else valid.push(file);
+        if (err) {
+          newErrors.push(err);
+          continue;
+        }
+        try {
+          valid.push(await toStableFile(file));
+        } catch {
+          newErrors.push(`"${file.name}" পড়া যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।`);
+        }
       }
       setErrors(newErrors);
       if (valid.length > 0) onFilesAdded(valid);
@@ -110,8 +118,10 @@ export default function ImageUploader({ onFilesAdded, disabled }: ImageUploaderP
           disabled={disabled}
           className="sr-only"
           onChange={(e) => {
-            handleFiles(e.target.files);
-            e.target.value = '';
+            const input = e.target;
+            handleFiles(input.files).finally(() => {
+              input.value = '';
+            });
           }}
         />
       </div>

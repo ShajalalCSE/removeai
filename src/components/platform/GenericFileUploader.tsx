@@ -1,6 +1,7 @@
 import { useCallback, useId, useRef, useState } from 'react';
 import { UploadCloud, X } from 'lucide-react';
 import { formatBytes } from '../../lib/binary';
+import { toStableFile } from '../../lib/file-utils';
 
 interface GenericFileUploaderProps {
   accept: string; // e.g. "application/pdf"
@@ -20,7 +21,7 @@ export default function GenericFileUploader({ accept, acceptLabel, maxSizeBytes,
   const dragCounter = useRef(0);
 
   const handleFiles = useCallback(
-    (fileList: FileList | null) => {
+    async (fileList: FileList | null) => {
       if (!fileList || fileList.length === 0) return;
       const file = fileList[0];
       if (file.size === 0) {
@@ -31,8 +32,12 @@ export default function GenericFileUploader({ accept, acceptLabel, maxSizeBytes,
         setError(`"${file.name}" সাইজে অনেক বড় (${formatBytes(file.size)})। সর্বোচ্চ সীমা ${formatBytes(maxSizeBytes)}।`);
         return;
       }
-      setError(null);
-      onFileSelected(file);
+      try {
+        setError(null);
+        onFileSelected(await toStableFile(file));
+      } catch {
+        setError(`"${file.name}" পড়া যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।`);
+      }
     },
     [onFileSelected, maxSizeBytes],
   );
@@ -112,8 +117,10 @@ export default function GenericFileUploader({ accept, acceptLabel, maxSizeBytes,
           disabled={disabled}
           className="sr-only"
           onChange={(e) => {
-            handleFiles(e.target.files);
-            e.target.value = '';
+            const input = e.target;
+            handleFiles(input.files).finally(() => {
+              input.value = '';
+            });
           }}
         />
       </div>
