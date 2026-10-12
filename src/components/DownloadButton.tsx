@@ -5,13 +5,25 @@ interface DownloadButtonProps {
   filename: string;
   label?: string;
   variant?: 'primary' | 'secondary';
+  /** Draws extra attention (solid fill + a soft pulsing glow) for the
+   * moment right after a result becomes ready, so it's obvious what to
+   * click next. */
+  highlight?: boolean;
 }
 
-export default function DownloadButton({ blob, filename, label = 'ডাউনলোড করুন', variant = 'primary' }: DownloadButtonProps) {
-  const base = 'focus-ring inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all hover:-translate-y-0.5';
+export default function DownloadButton({
+  blob,
+  filename,
+  label = 'ডাউনলোড করুন',
+  variant = 'primary',
+  highlight = false,
+}: DownloadButtonProps) {
+  const base = 'focus-ring inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold transition-all hover:-translate-y-0.5';
   const styles =
     variant === 'primary'
-      ? 'border border-neon-500/50 bg-neon-500/10 text-neon-400 hover:shadow-glow-green'
+      ? highlight
+        ? 'border border-neon-400 bg-neon-500 text-cyber-950 shadow-glow-green motion-safe:animate-pulse-glow hover:bg-neon-400'
+        : 'border border-neon-500/50 bg-neon-500/10 text-neon-400 hover:shadow-glow-green'
       : 'border border-cyber-600 bg-cyber-900 text-cyber-200 hover:border-neon-500/60';
 
   return (

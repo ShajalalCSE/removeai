@@ -47,8 +47,8 @@ export default function PlatformUploader({ onFileSelected, selectedFile, onClear
       try {
         setError(null);
         onFileSelected(await toStableFile(file));
-      } catch {
-        setError(`"${file.name}" পড়া যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।`);
+      } catch (readErr) {
+        setError(readErr instanceof Error ? readErr.message : `"${file.name}" পড়া যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।`);
       }
     },
     [onFileSelected],

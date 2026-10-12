@@ -91,9 +91,14 @@ export default {
           '0%': { transform: 'translateY(-100%)' },
           '100%': { transform: 'translateY(100%)' },
         },
+        'pulse-glow': {
+          '0%, 100%': { boxShadow: '0 0 0 1px rgb(0 255 136 / 0.5), 0 0 14px 1px rgb(0 255 136 / 0.3)' },
+          '50%': { boxShadow: '0 0 0 1px rgb(0 255 136 / 0.8), 0 0 26px 5px rgb(0 255 136 / 0.55)' },
+        },
       },
       animation: {
         scanline: 'scanline 2.5s linear infinite',
+        'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
       },
     },
   },

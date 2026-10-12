@@ -42,8 +42,8 @@ export default function ImageUploader({ onFilesAdded, disabled }: ImageUploaderP
         }
         try {
           valid.push(await toStableFile(file));
-        } catch {
-          newErrors.push(`"${file.name}" পড়া যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।`);
+        } catch (readErr) {
+          newErrors.push(readErr instanceof Error ? readErr.message : `"${file.name}" পড়া যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।`);
         }
       }
       setErrors(newErrors);

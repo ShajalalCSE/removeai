@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Sparkles, Trash2, SlidersHorizontal, Loader2 } from 'lucide-react';
 import type { CameraExifFields, CleanMode, CleanResult, ExifWriteResult, UploadedImage } from '../types/metadata';
 import ImagePreview from './ImagePreview';
 import MetadataViewer from './MetadataViewer';
@@ -7,7 +8,6 @@ import DownloadButton from './DownloadButton';
 import ProcessingStatus from './ProcessingStatus';
 import { getImageWorkerClient } from '../lib/worker-client';
 import { buildOutputFilename, cleanModeSuffix } from '../lib/image-export';
-import { PIXEL_7_PRESET, nowAsExifDateTime } from '../lib/presets';
 
 interface ImageCardProps {
   image: UploadedImage;
@@ -19,7 +19,7 @@ type Tab = 'clean' | 'exif';
 
 export default function ImageCard({ image, onRemove, onResultReady }: ImageCardProps) {
   const [tab, setTab] = useState<Tab>('clean');
-  const [processingMode, setProcessingMode] = useState<CleanMode | 'exif' | 'pixel-preset' | null>(null);
+  const [processingMode, setProcessingMode] = useState<CleanMode | 'exif' | null>(null);
   const [cleanResult, setCleanResult] = useState<CleanResult | null>(null);
   const [exifResult, setExifResult] = useState<ExifWriteResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -41,24 +41,20 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
     }
   };
 
-  const runExifWrite = async (fields: CameraExifFields, mode: 'exif' | 'pixel-preset' = 'exif') => {
+  const runExifWrite = async (fields: CameraExifFields) => {
     setError(null);
-    setProcessingMode(mode);
+    setProcessingMode('exif');
     try {
       const client = getImageWorkerClient();
       const result = await client.writeExif(image.file, fields);
       setExifResult(result);
       onResultReady?.(image.id, result.blob, buildOutputFilename(image.file.name, result.format, 'exif-edited'));
-      if (mode === 'pixel-preset') setTab('exif');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'এই ছবিতে EXIF ডেটা লেখা যায়নি।');
     } finally {
       setProcessingMode(null);
     }
   };
-
-  const runPixelPreset = () =>
-    runExifWrite({ ...PIXEL_7_PRESET.fields, dateTimeOriginal: nowAsExifDateTime() }, 'pixel-preset');
 
   const downloadableBlob = cleanResult?.blob ?? exifResult?.blob ?? null;
   const downloadFilename = cleanResult
@@ -96,87 +92,60 @@ export default function ImageCard({ image, onRemove, onResultReady }: ImageCardP
         </p>
       )}
 
-      <div className="mt-4 grid grid-cols-1 gap-2 xs:grid-cols-2 sm:grid-cols-4">
-        <button
-          type="button"
-          disabled={busy}
-          onClick={() => runClean('ai')}
-          className="focus-ring relative flex flex-col items-start gap-0.5 rounded-lg border border-neon-500/50 bg-neon-500/10 p-3 text-left transition-transform hover:-translate-y-0.5 hover:shadow-glow-green disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0"
-        >
-          <span className="absolute -top-2 right-2 rounded-full bg-neon-500 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-cyber-950">
+      <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+        <div className="relative">
+          <span className="absolute -top-2 right-3 z-10 rounded-full bg-neon-500 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-cyber-950">
             রেকমেন্ডেড
           </span>
-          <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-neon-400">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="flex-shrink-0">
-              <path d="M12 3v3m0 12v3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1M3 12h3m12 0h3M5.6 18.4l2.1-2.1m8.6-8.6 2.1-2.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-              <circle cx="12" cy="12" r="3" fill="currentColor" />
-            </svg>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => runClean('ai')}
+            className="focus-ring flex w-full items-center justify-center gap-2 rounded-lg border border-neon-500/50 bg-neon-500/10 px-4 py-2.5 text-sm font-semibold text-neon-400 transition-all hover:-translate-y-0.5 hover:shadow-glow-green disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0 disabled:hover:shadow-none"
+          >
+            {processingMode === 'ai' ? (
+              <Loader2 size={16} className="flex-shrink-0 animate-spin" aria-hidden="true" />
+            ) : (
+              <Sparkles size={16} className="flex-shrink-0" aria-hidden="true" />
+            )}
             AI মেটাডেটা রিমুভ করুন
-          </span>
-          <span className="text-xs text-cyber-200">AI ট্যাগ মুছে দেয়, ক্যামেরার তথ্য রাখে</span>
-        </button>
+          </button>
+        </div>
 
         <button
           type="button"
           disabled={busy}
           onClick={() => runClean('all')}
-          className="focus-ring flex flex-col items-start gap-0.5 rounded-lg border border-red-900/50 bg-red-950/20 p-3 text-left transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0"
+          className="focus-ring flex w-full items-center justify-center gap-2 rounded-lg border border-red-900/60 bg-red-950/20 px-4 py-2.5 text-sm font-semibold text-red-400 transition-all hover:-translate-y-0.5 hover:border-red-500/70 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0"
         >
-          <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-red-400">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="flex-shrink-0">
-              <path d="M4 7h16M9 7V4.5A1.5 1.5 0 0 1 10.5 3h3A1.5 1.5 0 0 1 15 4.5V7m2 0 -.7 12.3A2 2 0 0 1 14.3 21H9.7a2 2 0 0 1-2-1.7L7 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            সব মেটাডেটা রিমুভ করুন
-          </span>
-          <span className="text-xs text-red-400/70">ক্যামেরার তথ্যসহ সবকিছু মুছে দেয়</span>
-        </button>
-
-        <button
-          type="button"
-          disabled={busy}
-          onClick={runPixelPreset}
-          className="focus-ring flex flex-col items-start gap-0.5 rounded-lg border border-wire-500/50 bg-wire-500/10 p-3 text-left transition-transform hover:-translate-y-0.5 hover:shadow-glow-blue disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0"
-        >
-          <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-wire-400">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="flex-shrink-0">
-              <path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h2l1-1.5h7l1 1.5h2A1.5 1.5 0 0 1 20 8.5v9A1.5 1.5 0 0 1 18.5 19h-13A1.5 1.5 0 0 1 4 17.5v-9Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-              <circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="1.6" />
-            </svg>
-            ক্যামেরা ডেটা যোগ করুন
-          </span>
-          <span className="text-xs text-wire-400/70">1-ক্লিকে Pixel 7-এর তথ্য, টাইপ করার দরকার নেই</span>
+          {processingMode === 'all' ? (
+            <Loader2 size={16} className="flex-shrink-0 animate-spin" aria-hidden="true" />
+          ) : (
+            <Trash2 size={16} className="flex-shrink-0" aria-hidden="true" />
+          )}
+          সব মেটাডেটা রিমুভ করুন
         </button>
 
         <button
           type="button"
           disabled={busy}
           onClick={() => setTab(tab === 'exif' ? 'clean' : 'exif')}
-          className="focus-ring flex flex-col items-start gap-0.5 rounded-lg border border-cyber-600 bg-cyber-900/60 p-3 text-left transition-transform hover:-translate-y-0.5 hover:border-cyber-400 disabled:cursor-not-allowed disabled:opacity-50"
+          className="focus-ring flex w-full items-center justify-center gap-2 rounded-lg border border-cyber-600 bg-cyber-900/60 px-4 py-2.5 text-sm font-semibold text-cyber-100 transition-all hover:-translate-y-0.5 hover:border-cyber-400 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:-translate-y-0"
         >
-          <span className="text-sm font-semibold text-cyber-100">
-            {tab === 'exif' ? 'ম্যানুয়াল এডিটর লুকান' : 'ম্যানুয়াল EXIF এডিটর'}
-          </span>
-          <span className="text-xs text-cyber-300">নিজের ক্যামেরার তথ্য টাইপ করুন</span>
+          <SlidersHorizontal size={16} className="flex-shrink-0" aria-hidden="true" />
+          {tab === 'exif' ? 'ম্যানুয়াল এডিটর লুকান' : 'ম্যানুয়াল EXIF এডিটর'}
         </button>
       </div>
 
       {downloadableBlob && (
         <div className="mt-3">
-          <DownloadButton blob={downloadableBlob} filename={downloadFilename} />
+          <DownloadButton blob={downloadableBlob} filename={downloadFilename} highlight />
         </div>
       )}
 
       {busy && (
         <div className="mt-3">
-          <ProcessingStatus
-            label={
-              processingMode === 'exif'
-                ? 'EXIF ডেটা লেখা হচ্ছে…'
-                : processingMode === 'pixel-preset'
-                  ? 'Pixel 7 ক্যামেরা ডেটা যোগ হচ্ছে…'
-                  : 'ছবি প্রসেস হচ্ছে…'
-            }
-          />
+          <ProcessingStatus label={processingMode === 'exif' ? 'EXIF ডেটা লেখা হচ্ছে…' : 'ছবি প্রসেস হচ্ছে…'} />
         </div>
       )}
 
